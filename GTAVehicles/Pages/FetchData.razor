@@ -1,0 +1,199 @@
+﻿@page "/fetchdata"
+@using GTAVehicles.Data
+@using GTAVehicles.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@*
+    Using OwningComponentBase ensures that the service and related services
+    that share its scope are disposed with the component.
+    Otherwise DbContext in ForecastService will live for the life of the
+    connection, which may be problematic if clients stay
+    connected for a long time.
+
+    We access WeatherForecastService using @Service
+*@
+@inherits OwningComponentBase<GTAVehiclesService>
+
+<h1>GTA Player</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+<!-- AuthorizeView allows us to only show sections of the page -->
+<!-- based on the security on the current user -->
+<AuthorizeView>
+    <!-- Show this section if the user is logged in -->
+    <Authorized>
+        <h4>Hello, @context.User.Identity.Name!</h4>
+        @if (player == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Character Name</th>
+                        <th>Color</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var character in characters)
+                    {
+                        <tr>
+                            <td>@character.CharacterName</td>
+                            <td>@character.CharacterColor</td>
+                            <td>
+                                <!-- Edit the current character -->
+                                <button class="btn btn-primary"
+                                        @onclick="(() => EditCharacter(character))">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <!-- Add a new character -->
+                <button class="btn btn-primary"
+                        @onclick="AddNewCharacter">
+                    Add New Character
+                </button>
+            </p>
+        }
+        @if (ShowPopup)
+        {
+            <!-- This is the popup to create or edit a SelectedCharacter -->
+            <div class="modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Edit Character</h3>
+                            <!-- Button to close the popup -->
+                            <button type="button" class="close"
+                                    @onclick="ClosePopup">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <!-- Edit form for the current character -->
+                        <div class="modal-body">
+                            <input class="form-control" type="text"
+                                   placeholder="Character Name"
+                                   @bind="SelectedCharacter.CharacterName" />
+                            <input class="form-control" type="text"
+                                   placeholder="Color associated with this Character"
+                                   @bind="SelectedCharacter.CharacterColor" />
+                            <br />
+                            <!-- Button to save the character -->
+                            <button class="btn btn-primary"
+                                    @onclick="SaveCharacter">
+                                Save
+                            </button>
+                            <!-- Only show delete button if not a new record -->
+                            @if (SelectedCharacter.Id > 0)
+                            {
+                                <!-- Button to delete the character -->
+                                <button class="btn btn-primary"
+                                        @onclick="DeleteCharacter">
+                                    Delete
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </Authorized>
+    <!-- Show this section if the user is not logged in -->
+    <NotAuthorized>
+        <p>You're not signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    // AuthenticationState is available as a CascadingParameter
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    Gtaplayers player;
+    List<GtaplayerCharacters> characters;
+    GtaplayerCharacters SelectedCharacter;
+    bool ShowPopup = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the current user
+        var user = (await authenticationStateTask).User;
+        if (user.Identity.Name != null)
+        {
+            // Get the player object for the current user
+            player = await @Service.GetPlayerAsync(user.Identity.Name);
+
+            // Get the character(s) for that player
+            characters = await @Service.GetCharactersAsync(player);
+        }
+    }
+
+    void ClosePopup()
+    {
+        // Close the Popup
+        ShowPopup = false;
+    }
+
+    void AddNewCharacter()
+    {
+        // Make new Character
+        SelectedCharacter = new GtaplayerCharacters();
+        // Set Id to 0 so we know it is a new record
+        SelectedCharacter.Id = 0;
+        //Set the player to the current user
+        SelectedCharacter.PlayerID = player.Id;
+        // Open the Popup
+        ShowPopup = true;
+    }
+
+    void EditCharacter(GtaplayerCharacters objGtaplayerCharacter)
+    {
+        // Set the selected character
+        // as the current character
+        SelectedCharacter = objGtaplayerCharacter;
+        // Open the Popup
+        ShowPopup = true;
+    }
+
+    async Task SaveCharacter()
+    {
+        // Close the Popup
+        ShowPopup = false;
+        // Get the current user
+        var user = (await authenticationStateTask).User;
+        // A new forecast will have the Id set to 0
+        if (SelectedCharacter.Id == 0)
+        {
+            // Save the result
+            var result =
+            @Service.CreateCharacterAsync(SelectedCharacter);
+        }
+        else
+        {
+            // This is an update
+            var result =
+            @Service.UpdateCharacterAsync(SelectedCharacter);
+        }
+        // Get the forecasts for the current user
+        characters = await @Service.GetCharactersAsync(player);
+    }
+
+    async Task DeleteCharacter()
+    {
+        // Close the Popup
+        ShowPopup = false;
+        // Get the current user
+        var user = (await authenticationStateTask).User;
+        // Delete the forecast
+        var result = @Service.DeleteCharacterAsync(SelectedCharacter);
+        // Get the forecasts for the current user
+        characters = await @Service.GetCharactersAsync(player);
+    }
+}
+

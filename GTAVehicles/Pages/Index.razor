@@ -1,0 +1,132 @@
+﻿@page "/"
+@using GTAVehicles.Data
+@using GTAVehicles.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@*
+    Using OwningComponentBase ensures that the service and related services
+    that share its scope are disposed with the component.
+    Otherwise DbContext in ForecastService will live for the life of the
+    connection, which may be problematic if clients stay
+    connected for a long time.
+
+    We access WeatherForecastService using @Service
+*@
+@inherits OwningComponentBase<GTAVehiclesService>
+
+<AuthorizeView>
+    <!-- Show this section if the user is logged in -->
+    <Authorized>
+        <h1>Hello, @context.User.Identity.Name!</h1>
+        <p>You are an Admin!</p>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Welcome, visitor!</h1>
+        <p>Sign in to assign vehicles to your in-game garage</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <RadzenDropDown AllowFiltering="false"
+                        AllowClear="true"
+                        @bind-Value="SelectedVehicleClasses"
+                        Multiple="true"
+                        Placeholder="Filter by Class(es)..."
+                        Data="vehicleClasses"
+                        TextProperty="ClassName"
+                        ValueProperty="Id"
+                        Change="PerformSearch"
+                        Style="margin-bottom: 20px; width:250px;" />
+    </div>
+</div>
+
+@if (vehicles != null)
+{
+    @*<RadzenDataList WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
+        <Template Context="vehicle">
+            <RadzenCard Style="width:300px;">
+                <div class="vehTable">
+                    <div class="vehTopRow">
+                        <div class="VehCell">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
+                        <div class="VehCell">@vehicle.TrackSpeed</div>
+                    </div>
+                    <div class="VehCenterRow">
+                        <div class="VehCell"><RadzenImage Style="width:100px;" /></div>
+                    </div>
+                    <div class="VehBottomRow">
+                        <div class="VehCell">@vehicle.VehicleModel</div>
+                        <div class="VehCell">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
+                    </div>
+                </div>
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>*@
+
+    <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px">
+        <Columns>
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackRank" Title="Track Ranking (overall)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackRankInClass" Title="Track Ranking (in class)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragSpeed" Title="Straight-line&#10;Speed (mph)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragRank" Title="Straight-line Ranking (overall)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragRankInClass" Title="Straight-line Ranking (in class)" />
+        </Columns>
+    </RadzenGrid>
+}
+@code {
+    // AuthenticationState is available as a CascadingParameter
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    List<GtavehicleClass> vehicleClasses;
+    IQueryable<GTAVehiclesRanked> vehicles;
+    object SelectedVehicleClasses;
+    string SearchValue = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the current user
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.Name != null)
+        {
+            // Is user in the players table
+            var player = await @Service.GetPlayerAsync(user.Identity.Name);
+
+            if (player == null)
+            {
+                // Add them to the Players table
+                Gtaplayers NewGtAPlayer = new Gtaplayers();
+                NewGtAPlayer.UserName = user.Identity.Name;
+                var result = @Service.CreatePlayerAsync(NewGtAPlayer);
+            }
+        }
+
+        // Get a list of vehicle classes for a dropdown selector
+        vehicleClasses = await @Service.GetGTAVehicleClassesAsync();
+
+        await PerformSearch();
+    }
+
+    async Task PerformSearch()
+    {
+        if (SelectedVehicleClasses != null)
+        {
+            var Templist = (IEnumerable<dynamic>)SelectedVehicleClasses;
+            var ListOfSelectedVehicleClasses = Templist.OfType<string>().ToList().Select(int.Parse).ToList();
+
+            // Get a list of all vehicles in the game
+            vehicles = await @Service.GetGTAVehiclesRankedAsync(ListOfSelectedVehicleClasses);
+        }
+        else
+        {
+            // Get a list of all vehicles in the game
+            List<int> DefaultValue = new List<int>() { 0 };
+            vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
+        }
+    }
+
+}
