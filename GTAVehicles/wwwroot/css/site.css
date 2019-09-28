@@ -152,33 +152,6 @@ app {
         content: "Select All";        
     }
 
-    .VehTable {
-        display: table;
-    }
-
-    .VehTopRow {
-        display: table-row;
-        width: 150px;
-    }
-
-    .VehCenterRow {
-        display: table-row;
-        height: 100px;
-        width: 150px;
-    }
-
-    .VehBottomRow {
-        display: table-row;
-        text-transform: uppercase;
-        width: 150px;
-    }
-
-    .VehCell {
-        display: table-cell;
-        border: solid;
-        border-width: thin;
-    }
-
     .ui-column-title {
         white-space: normal;
         height: 2rem;

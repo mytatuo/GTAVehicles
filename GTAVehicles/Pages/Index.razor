@@ -67,12 +67,16 @@
         <Columns>
             <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
             <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackRank" Title="Track Ranking (overall)" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackRankInClass" Title="Track Ranking (in class)" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragSpeed" Title="Straight-line&#10;Speed (mph)" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragRank" Title="Straight-line Ranking (overall)" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragRankInClass" Title="Straight-line Ranking (in class)" />
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
+                <Template Context="data">
+                    @String.Concat(data.TrackSpeed, " (", data.TrackRankInClass, " in ", data.ClassName, ", ", data.TrackRank, " overall)")
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragSpeed" Title="Straight-line Speed (mph)">
+                <Template Context="data">
+                    @String.Format("{0:F}", data.DragSpeed) (@data.DragRankInClass in @data.ClassName, @data.DragRank overall)
+                </Template>
+            </RadzenGridColumn>
         </Columns>
     </RadzenGrid>
 }
