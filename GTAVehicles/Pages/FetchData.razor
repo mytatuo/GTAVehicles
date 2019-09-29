@@ -60,6 +60,25 @@
                     Add New Character
                 </button>
             </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>GarageId</th>
+                        <th>CharId</th>
+                        <th>Garage Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var garage in garages)
+                    {
+                        <tr>
+                            <td>@garage.GarageId</td>
+                            <td>@garage.CharacterId</td>
+                            <td>@garage.GarageName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         @if (ShowPopup)
         {
@@ -118,6 +137,7 @@
     Gtaplayers player;
     List<GtaplayerCharacters> characters;
     GtaplayerCharacters SelectedCharacter;
+    List<GtaplayerGarages> garages;
     bool ShowPopup = false;
 
     protected override async Task OnInitializedAsync()
@@ -131,6 +151,9 @@
 
             // Get the character(s) for that player
             characters = await @Service.GetCharactersAsync(player);
+
+            // Get the garage(s) for a character
+            garages = await @Service.GetGaragesAsync(SelectedCharacter);
         }
     }
 

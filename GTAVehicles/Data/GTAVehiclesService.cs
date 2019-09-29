@@ -155,5 +155,17 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(true);
         }
+
+        public Task<List<GtaplayerGarages>> GetGaragesAsync(GtaplayerCharacters character)
+        {
+            List<GtaplayerGarages> colGTAGarages = new List<GtaplayerGarages>();
+            // get GTA Garages under a particular Character
+
+            colGTAGarages = (from gtagarage in _context.GtaplayerGarages
+                             where gtagarage.CharacterId == 1
+                             select gtagarage).ToList();
+
+            return Task.FromResult(colGTAGarages);
+        }
     }
 }

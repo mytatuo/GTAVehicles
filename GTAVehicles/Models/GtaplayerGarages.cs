@@ -13,6 +13,7 @@ namespace GTAVehicles.Models
         public int Id { get; set; }
         public int? GarageId { get; set; }
         public int? CharacterId { get; set; }
+        public string GarageName { get; set; }
 
         public virtual GtaplayerCharacters Character { get; set; }
         public virtual Gtagarages Garage { get; set; }
