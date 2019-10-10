@@ -1,6 +1,7 @@
 ﻿@page "/administration"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@using System.Linq;
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -16,32 +17,21 @@
             }
             else
             {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>User Name</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in ColUsers)
-                        {
-                            <tr>
-                                <td>@user.Id.Substring(0, 5) ...</td>
-                                <td>@user.UserName</td>
-                                <td>@user.Email</td>
-                                <td>
-                                    <!-- Edit the current forecast -->
-                                    <button class="btn btn-primary"
-                                            @onclick="(() => EditUser(user))">
-                                        Edit
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                            AllowPaging="true" PageSize="4" AllowSorting="true" Data="@ColUsers" 
+                            TItem="IdentityUser" ColumnWidth="200px">
+                    <Columns>
+                        <RadzenGridColumn TItem="IdentityUser" Property="user" Title="Edit" Width="20px">
+                            <Template Context="user">
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                              Click="@(() => EditUser(user))" Icon="edit" Style="align-content:center;">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="IdentityUser" Property="UserName" Title="UserName" />
+                        <RadzenGridColumn TItem="IdentityUser" Property="Email" Title="Email" />
+                    </Columns>
+                </RadzenGrid>
             }
             @if (ShowPopup)
             {
@@ -112,7 +102,7 @@
                     </div>
                 </div>
             }
-            <button class="btn btn-success" @onclick="AddNewUser">Add User</button>
+            <br /><button class="btn btn-success" @onclick="AddNewUser">Add User</button>
         }
         else
         {
