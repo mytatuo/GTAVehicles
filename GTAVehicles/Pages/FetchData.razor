@@ -1,6 +1,7 @@
 ﻿@page "/fetchdata"
 @using GTAVehicles.Data
 @using GTAVehicles.Models
+@using System.Linq;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @*
     Using OwningComponentBase ensures that the service and related services
@@ -13,9 +14,9 @@
 *@
 @inherits OwningComponentBase<GTAVehiclesService>
 
-<h1>GTA Player</h1>
+<h1>GTA Player Characters</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+<p>Click the arrow next to each character to see the garages owned by that character. Edit character names/colors with the blue Edit button.</p>
 <!-- AuthorizeView allows us to only show sections of the page -->
 <!-- based on the security on the current user -->
 <AuthorizeView>
@@ -28,31 +29,27 @@
         }
         else
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Character Name</th>
-                        <th>Color</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var character in characters)
-                    {
-                        <tr>
-                            <td>@character.CharacterName</td>
-                            <td>@character.CharacterColor</td>
-                            <td>
-                                <!-- Edit the current character -->
-                                <button class="btn btn-primary"
-                                        @onclick="(() => EditCharacter(character))">
-                                    Edit
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@characters" TItem="GtaplayerCharacters" ColumnWidth="200px">
+                <Template Context="character">
+                    <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="character.GtaplayerGarages" TItem="GtaplayerGarages">
+                        <Columns>
+                            <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageId" Title="Garage ID#" />
+                            <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
+                        </Columns>
+                    </RadzenGrid>
+                </Template>
+                <Columns>
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterName" Title="Character Name" />
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterColor" Title="Associated Color" />
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="character" Title="Edit" Width="20px">
+                        <Template Context="character">
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                          Click="@(() => EditCharacter(character))" Icon="edit" Style="align-content:center;">
+                            </RadzenButton>
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
             <p>
                 <!-- Add a new character -->
                 <button class="btn btn-primary"
@@ -60,30 +57,8 @@
                     Add New Character
                 </button>
             </p>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>GarageId</th>
-                        <th>CharId</th>
-                        <th>Garage Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var garage in garages)
-                    {
-                        <tr>
-                            <td>@garage.GarageId</td>
-                            <td>@garage.CharacterId</td>
-                            <td>@garage.GarageName</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        @if (ShowPopup)
-        {
-            <!-- This is the popup to create or edit a SelectedCharacter -->
-            <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        }  @if (ShowPopup)
+        {<!-- This is the popup to create or edit a SelectedCharacter --> <div class="modal" tabindex="-1" style="display:block" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -102,6 +77,15 @@
                             <input class="form-control" type="text"
                                    placeholder="Color associated with this Character"
                                    @bind="SelectedCharacter.CharacterColor" />
+                            <!--RadzenDropDown>
+
+                                <Template>
+
+                                    Company:
+
+                                </Template>
+
+                            </RadzenDropDown-->
                             <br />
                             <!-- Button to save the character -->
                             <button class="btn btn-primary"
@@ -139,6 +123,8 @@
     GtaplayerCharacters SelectedCharacter;
     List<GtaplayerGarages> garages;
     bool ShowPopup = false;
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -218,5 +204,36 @@
         // Get the forecasts for the current user
         characters = await @Service.GetCharactersAsync(player);
     }
+
+    public sealed class CharColors
+    {
+        private CharColors() { }
+
+        public static readonly string Beige = "Beige";
+        public static readonly string Black = "Black";
+        public static readonly string Blue = "Blue";
+        public static readonly string Brown = "Brown";
+        public static readonly string Cyan = "Cyan";
+        public static readonly string Gold = "Gold";
+        public static readonly string Gray = "Gray";
+        public static readonly string Green = "Green";
+        public static readonly string Indigo = "Indigo";
+        public static readonly string Lime = "Lime";
+        public static readonly string Magenta = "Magenta";
+        public static readonly string Maroon = "Maroon";
+        public static readonly string Navy = "Navy";
+        public static readonly string Olive = "Olive";
+        public static readonly string Orange = "Orange";
+        public static readonly string Pink = "Pink";
+        public static readonly string Purple = "Purple";
+        public static readonly string Red = "Red";
+        public static readonly string Silver = "Silver";
+        public static readonly string Teal = "Teal";
+        public static readonly string Turquoise = "Turquoise";
+        public static readonly string Violet = "Violet";
+        public static readonly string White = "White";
+        public static readonly string Yellow = "Yellow";
+    }
+
 }
 
