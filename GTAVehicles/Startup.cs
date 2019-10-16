@@ -43,7 +43,8 @@ namespace GTAVehicles
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor()
+                .AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<GTAVehiclesService>();
         }

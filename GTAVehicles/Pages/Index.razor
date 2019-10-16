@@ -25,8 +25,8 @@
     </NotAuthorized>
 </AuthorizeView>
 
-
-@*<div class="row">
+@strerror
+<div class="row">
     <div class="col-md-6">
         <RadzenDropDown AllowFiltering="false"
                         AllowClear="true"
@@ -39,7 +39,7 @@
                         Change="PerformSearch"
                         Style="margin-bottom: 20px; width:250px;" />
     </div>
-</div>*@
+</div>
 
 @if (vehicles != null)
 {
@@ -81,13 +81,14 @@
     </RadzenGrid>
 }
 @code {
-    // AuthenticationState is available as a CascadingParameter
+        // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
+    string strerror = "";
     List<GtavehicleClass> vehicleClasses;
     IQueryable<GTAVehiclesRanked> vehicles;
-    object SelectedVehicleClasses;
+    IEnumerable<int> SelectedVehicleClasses = new List<int>() { 0 };
     string SearchValue = "";
 
     protected override async Task OnInitializedAsync()
@@ -112,23 +113,40 @@
         // Get a list of vehicle classes for a dropdown selector
         vehicleClasses = await @Service.GetGTAVehicleClassesAsync();
 
-        await PerformSearch();
+        try
+        {
+            await PerformSearch();
+        }
+        catch(Exception ex)
+        {
+            strerror = ex.GetBaseException().Message;
+        }
     }
 
     async Task PerformSearch()
     {
-        if (SelectedVehicleClasses != null)
+        strerror = "";
+        if (SelectedVehicleClasses.Count() > 0)
         {
-            var Templist = (IEnumerable<dynamic>)SelectedVehicleClasses;
-            var ListOfSelectedVehicleClasses = Templist.OfType<string>().ToList().Select(int.Parse).ToList();
+            var Templist = (IEnumerable<int>)SelectedVehicleClasses;
+
+            // Build list
+            List<int> colIds = new List<int>();
+
+            foreach (var item in Templist)
+            {
+                colIds.Add(item);
+            }
 
             // Get a list of all vehicles in the game
-            vehicles = await @Service.GetGTAVehiclesRankedAsync(ListOfSelectedVehicleClasses);
+            vehicles = await @Service.GetGTAVehiclesRankedAsync(colIds);
         }
         else
         {
             // Get a list of all vehicles in the game
-            List<int> DefaultValue = new List<int>() { 0 };
+            List<int>
+                DefaultValue = new List<int>
+                    () { 0 };
             vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
         }
     }
