@@ -33,21 +33,27 @@
                 <Template Context="character">
                     <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="character.GtaplayerGarages" TItem="GtaplayerGarages">
                         <Columns>
-                            <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageId" Title="Garage ID#" />
+                            <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="20px">
+                                <Template Context="garage">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Primary"
+                                                  Click="@(() => EditGarage(garage))" Icon="edit" Style="align-content:center;">
+                                    </RadzenButton>
+                                </Template>
+                            </RadzenGridColumn>
                             <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
                         </Columns>
                     </RadzenGrid>
                 </Template>
                 <Columns>
-                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterName" Title="Character Name" />
-                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterColor" Title="Associated Color" />
-                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="character" Title="Edit" Width="20px">
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="character" Title="Edit" Width="50px">
                         <Template Context="character">
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
                                           Click="@(() => EditCharacter(character))" Icon="edit" Style="align-content:center;">
                             </RadzenButton>
                         </Template>
                     </RadzenGridColumn>
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterName" Title="Character Name" />
+                    <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterColor" Title="Associated Color" />
                 </Columns>
             </RadzenGrid>
             <p>
@@ -62,7 +68,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title">Edit Character</h3>
+                            <h3 class="modal-title">Add/Edit Character</h3>
                             <!-- Button to close the popup -->
                             <button type="button" class="close"
                                     @onclick="ClosePopup">
@@ -77,14 +83,10 @@
                             <input class="form-control" type="text"
                                    placeholder="Color associated with this Character"
                                    @bind="SelectedCharacter.CharacterColor" />
-                            <!--RadzenDropDown>
-
-                                <Template>
-
-                                    Company:
-
+                            <!--RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors">
+                                <Template context="">
+                                    @((context as CharColors))
                                 </Template>
-
                             </RadzenDropDown-->
                             <br />
                             <!-- Button to save the character -->
@@ -205,35 +207,9 @@
         characters = await @Service.GetCharactersAsync(player);
     }
 
-    public sealed class CharColors
-    {
-        private CharColors() { }
+    void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
 
-        public static readonly string Beige = "Beige";
-        public static readonly string Black = "Black";
-        public static readonly string Blue = "Blue";
-        public static readonly string Brown = "Brown";
-        public static readonly string Cyan = "Cyan";
-        public static readonly string Gold = "Gold";
-        public static readonly string Gray = "Gray";
-        public static readonly string Green = "Green";
-        public static readonly string Indigo = "Indigo";
-        public static readonly string Lime = "Lime";
-        public static readonly string Magenta = "Magenta";
-        public static readonly string Maroon = "Maroon";
-        public static readonly string Navy = "Navy";
-        public static readonly string Olive = "Olive";
-        public static readonly string Orange = "Orange";
-        public static readonly string Pink = "Pink";
-        public static readonly string Purple = "Purple";
-        public static readonly string Red = "Red";
-        public static readonly string Silver = "Silver";
-        public static readonly string Teal = "Teal";
-        public static readonly string Turquoise = "Turquoise";
-        public static readonly string Violet = "Violet";
-        public static readonly string White = "White";
-        public static readonly string Yellow = "Yellow";
-    }
+    string[] CharColors = { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 
 }
 

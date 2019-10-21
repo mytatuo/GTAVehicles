@@ -43,45 +43,53 @@
 
 @if (vehicles != null)
 {
-    @*<RadzenDataList WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
-        <Template Context="vehicle">
-            <RadzenCard Style="width:300px;">
-                <div class="vehTable">
-                    <div class="vehTopRow">
-                        <div class="VehCell">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
-                        <div class="VehCell">@vehicle.TrackSpeed</div>
-                    </div>
-                    <div class="VehCenterRow">
-                        <div class="VehCell"><RadzenImage Style="width:100px;" /></div>
-                    </div>
-                    <div class="VehBottomRow">
-                        <div class="VehCell">@vehicle.VehicleModel</div>
-                        <div class="VehCell">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
-                    </div>
-                </div>
-            </RadzenCard>
-        </Template>
-    </RadzenDataList>*@
+    <RadzenTabs>
+        <Tabs>
+            <RadzenTabsItem Text="DataList">
+                <RadzenDataList WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
+                    <Template Context="vehicle">
+                        <RadzenCard Style="width:300px;">
+                            <div class="vehTable">
+                                <div class="vehTopRow">
+                                    <div class="VehCell">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
+                                    <div class="VehCell">@vehicle.TrackSpeed</div>
+                                </div>
+                                <div class="VehCenterRow">
+                                    <div class="VehCell"><RadzenImage Path="@string.Concat(vehicle.VehicleModel.Replace(' ', '-').ToLower(), ".jpg")" Style="width:100px;" /></div>
+                                </div>
+                                <div class="VehBottomRow">
+                                    <div class="VehCell">@vehicle.VehicleModel</div>
+                                    <div class="VehCell">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
+                                </div>
+                            </div>
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+            </RadzenTabsItem>
 
-    <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px">
-        <Columns>
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
-                <Template Context="data">
-                    @String.Concat(data.TrackSpeed, " (", data.TrackRankInClass, " in ", data.ClassName, ", ", data.TrackRank, " overall)")
-                </Template>
-            </RadzenGridColumn>
-            <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragSpeed" Title="Straight-line Speed (mph)">
-                <Template Context="data">
-                    @String.Format("{0:F}", data.DragSpeed) (@data.DragRankInClass in @data.ClassName, @data.DragRank overall)
-                </Template>
-            </RadzenGridColumn>
-        </Columns>
-    </RadzenGrid>
+            <RadzenTabsItem Text="DataGrid">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px">
+                    <Columns>
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
+                            <Template Context="data">
+                                @String.Concat(data.TrackSpeed, " (", data.TrackRankInClass, " in ", data.ClassName, ", ", data.TrackRank, " overall)")
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Property="DragSpeed" Title="Straight-line Speed (mph)">
+                            <Template Context="data">
+                                @String.Format("{0:F}", data.DragSpeed) (@data.DragRankInClass in @data.ClassName, @data.DragRank overall)
+                            </Template>
+                        </RadzenGridColumn>
+                    </Columns>
+                </RadzenGrid>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
 }
 @code {
-        // AuthenticationState is available as a CascadingParameter
+    // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -116,7 +124,7 @@
         {
             await PerformSearch();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             strerror = ex.GetBaseException().Message;
         }
