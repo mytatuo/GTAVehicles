@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace GTAVehicles.Models
         public virtual DateTimeOffset? LockoutEnd { get; set; }
         public virtual bool LockoutEnabled { get; set; }
         public virtual bool EmailConfirmed { get; set; }
-        public virtual string Email { get; set; }
+        public virtual string UserEmail { get; set; }
         public virtual string ConcurrencyStamp { get; set; }
         public virtual int AccessFailedCount { get; set; }
         public virtual bool TwoFactorEnabled { get; set; }

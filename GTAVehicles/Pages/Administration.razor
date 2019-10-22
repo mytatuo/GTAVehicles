@@ -68,7 +68,7 @@
                                 }
                                 <input class="form-control" type="text"
                                        placeholder="Email"
-                                       @bind="objUser.Email" />
+                                       @bind="objUser.UserEmail" />
                                 <input class="form-control" type="password"
                                        placeholder="Password"
                                        @bind="objUser.PasswordHash" />
@@ -83,18 +83,14 @@
                                 </select>
                                 <br /><br />
                                 <!-- Button to save the user -->
-                                <button class="btn btn-primary"
-                                        @onclick="SaveUser">
-                                    Save
-                                </button>
+                                <RadzenButton  ButtonStyle="ButtonStyle.Success"
+                                        Click="SaveUser" Text="Save" />
                                 <!-- Only show delete button if not a new record -->
                                 @if (objUser.Id != "")
                                 {
                                     <!-- Button to delete the forecast -->
-                                    <button class="btn btn-danger"
-                                            @onclick="DeleteUser">
-                                        Delete
-                                    </button>
+                                    <RadzenButton  ButtonStyle="ButtonStyle.Danger"
+                                            Click="DeleteUser" Text="Delete" />
                                 }
                                 <br />
                                 <span style="color:red">@strError</span>
@@ -166,7 +162,8 @@
             {
                 Id =  item.Id,
                 IdentityUserUserName = item.UserName,
-                Email = item.Email
+                UserEmail = item.Email,
+                PasswordHash = "*****"
             };
 
             ColUsers.Add(NewUser);
@@ -197,7 +194,7 @@
                 var user = await _UserManager.FindByIdAsync(objUser.Id);
 
                 // Update Email
-                user.Email = objUser.Email;
+                user.Email = objUser.UserEmail;
 
                 // Update the user
                 await _UserManager.UpdateAsync(user);
@@ -254,7 +251,7 @@
                     new IdentityUser
                     {
                         UserName = objUser.IdentityUserUserName,
-                        Email = objUser.Email
+                        Email = objUser.UserEmail
                     };
 
                 var CreateResult = await _UserManager.CreateAsync(NewUser, objUser.PasswordHash);
