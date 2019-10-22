@@ -33,7 +33,7 @@
                         @bind-Value="SelectedVehicleClasses"
                         Multiple="true"
                         Placeholder="Filter by Class(es)..."
-                        Data="vehicleClasses"
+                        Data="@vehicleClasses"
                         TextProperty="ClassName"
                         ValueProperty="Id"
                         Change="PerformSearch"
@@ -46,7 +46,7 @@
     <RadzenTabs>
         <Tabs>
             <RadzenTabsItem Text="DataList">
-                <RadzenDataList WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
+                <RadzenDataList @ref="DataListRef" WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
                     <Template Context="vehicle">
                         <RadzenCard Style="width:300px;">
                             <div class="vehTable">
@@ -94,9 +94,10 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     string strerror = "";
-    List<GtavehicleClass> vehicleClasses;
+    RadzenDataList<GTAVehiclesRanked> DataListRef;
+    List<GtavehicleDropdownClass> vehicleClasses = new List<GtavehicleDropdownClass>();
     IQueryable<GTAVehiclesRanked> vehicles;
-    IEnumerable<int> SelectedVehicleClasses = new List<int>() { 0 };
+    IEnumerable<string> SelectedVehicleClasses = new string[] { };
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,7 +119,16 @@
         }
 
         // Get a list of vehicle classes for a dropdown selector
-        vehicleClasses = await @Service.GetGTAVehicleClassesAsync();
+        var TempVehicleClasses = await @Service.GetGTAVehicleClassesAsync();
+
+        foreach (var item in TempVehicleClasses)
+        {
+            GtavehicleDropdownClass newGtavehicleDropdownClass = new GtavehicleDropdownClass();
+            newGtavehicleDropdownClass.Id = item.Id.ToString();
+            newGtavehicleDropdownClass.ClassName = item.ClassName;
+
+            vehicleClasses.Add(newGtavehicleDropdownClass);
+        }
 
         try
         {
@@ -135,25 +145,27 @@
         strerror = "";
         if (SelectedVehicleClasses.Count() > 0)
         {
-            var Templist = (IEnumerable<int>)SelectedVehicleClasses;
-
             // Build list
             List<int> colIds = new List<int>();
 
-            foreach (var item in Templist)
+            foreach (var item in SelectedVehicleClasses)
             {
-                colIds.Add(item);
+                int intValue = Convert.ToInt32(item.ToString());
+                colIds.Add(intValue);
             }
 
             // Get a list of all vehicles in the game
             vehicles = await @Service.GetGTAVehiclesRankedAsync(colIds);
+
+            if (DataListRef != null)
+            {
+                DataListRef.FirstPage();
+            }
         }
         else
         {
             // Get a list of all vehicles in the game
-            List<int>
-                DefaultValue = new List<int>
-                    () { 0 };
+            List<int> DefaultValue = new List<int>() { 0 };
             vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
         }
     }

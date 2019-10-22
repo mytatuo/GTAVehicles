@@ -22,4 +22,10 @@ namespace GTAVehicles.Models
         public int DragRank { get; set; }
         public int DragRankInClass { get; set; }
     }
+
+    public partial class GtavehicleDropdownClass
+    {
+        public string Id { get; set; }
+        public string ClassName { get; set; }
+    }
 }
