@@ -1,6 +1,7 @@
 ﻿@page "/administration"
 @using Microsoft.AspNetCore.Authorization;
 @using Microsoft.AspNetCore.Identity;
+@using GTAVehicles.Models;
 @using System.Linq;
 @inject UserManager<IdentityUser> _UserManager
 @inject RoleManager<IdentityRole> _RoleManager
@@ -19,17 +20,17 @@
             {
                 <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
                             AllowPaging="true" PageSize="4" AllowSorting="true" Data="@ColUsers" 
-                            TItem="IdentityUser" ColumnWidth="200px">
+                            TItem="IdentityUserDTO" ColumnWidth="200px">
                     <Columns>
-                        <RadzenGridColumn TItem="IdentityUser" Property="user" Title="Edit" Width="20px">
+                        <RadzenGridColumn TItem="IdentityUserDTO" Property="user" Title="Edit" Width="20px">
                             <Template Context="user">
                                 <RadzenButton ButtonStyle="ButtonStyle.Secondary"
                                               Click="@(() => EditUser(user))" Icon="edit" Style="align-content:center;">
                                 </RadzenButton>
                             </Template>
                         </RadzenGridColumn>
-                        <RadzenGridColumn TItem="IdentityUser" Property="UserName" Title="UserName" />
-                        <RadzenGridColumn TItem="IdentityUser" Property="Email" Title="Email" />
+                        <RadzenGridColumn TItem="IdentityUserDTO" Property="IdentityUserUserName" Title="User Name" />
+                        <RadzenGridColumn TItem="IdentityUserDTO" Property="Email" Title="Email" />
                     </Columns>
                 </RadzenGrid>
             }
@@ -47,7 +48,7 @@
                                     <span aria-hidden="true">X</span>
                                 </button>
                             </div>
-                            <!-- Edit form for the current forecast -->
+                            <!-- Edit form -->
                             <div class="modal-body">
                                 <!-- Only show Id if not a new user -->
                                 @if (objUser.Id != "")
@@ -57,13 +58,13 @@
                                 <!-- Only allow edit if a new user -->
                                 @if (objUser.Id != "")
                                 {
-                                    <p>@objUser.UserName</p>
+                                    <p>@objUser.IdentityUserUserName</p>
                                 }
                                 else
                                 {
                                     <input class="form-control" type="text"
                                            placeholder="UserName"
-                                           @bind="objUser.UserName" />
+                                           @bind="objUser.IdentityUserUserName" />
                                 }
                                 <input class="form-control" type="text"
                                        placeholder="Email"
@@ -118,8 +119,8 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     string ADMINISTRATION_ROLE = "Administrators";
-    IdentityUser objUser = new IdentityUser();
-    List<IdentityUser> ColUsers = new List<IdentityUser>();
+    IdentityUserDTO objUser = new IdentityUserDTO();
+    List<IdentityUserDTO> ColUsers = new List<IdentityUserDTO>();
 
     List<string> Options = new List<string>() { "Users", "Administrators" };
     System.Security.Claims.ClaimsPrincipal CurrentUser;
@@ -148,7 +149,7 @@
         strError = "";
 
         // Collection to hold users
-        ColUsers = new List<IdentityUser>();
+        ColUsers = new List<IdentityUserDTO>();
 
         // get users from _UserManager
         var user = _UserManager.Users.Select(x => new IdentityUser
@@ -161,14 +162,21 @@
 
         foreach (var item in user)
         {
-            ColUsers.Add(item);
+            var NewUser = new IdentityUserDTO
+            {
+                Id =  item.Id,
+                IdentityUserUserName = item.UserName,
+                Email = item.Email
+            };
+
+            ColUsers.Add(NewUser);
         }
     }
 
     void AddNewUser()
     {
         // Make new user
-        objUser = new IdentityUser();
+        objUser = new IdentityUserDTO();
         objUser.PasswordHash = "*****";
 
         // Set Id to blank so we know it is a new record
@@ -245,7 +253,7 @@
                 var NewUser =
                     new IdentityUser
                     {
-                        UserName = objUser.UserName,
+                        UserName = objUser.IdentityUserUserName,
                         Email = objUser.Email
                     };
 
@@ -288,7 +296,7 @@
         }
     }
 
-    async Task EditUser(IdentityUser _IdentityUser)
+    async Task EditUser(IdentityUserDTO _IdentityUser)
     {
         // Set the selected user
         // as the current user
