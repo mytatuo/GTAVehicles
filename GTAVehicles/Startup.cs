@@ -42,6 +42,13 @@ namespace GTAVehicles
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddCircuitOptions(options => { options.DetailedErrors = true; });
