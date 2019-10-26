@@ -16,6 +16,10 @@ using GTAVehicles.Areas.Identity;
 using GTAVehicles.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 using GTAVehicles.Models;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace GTAVehicles
 {
@@ -47,6 +51,15 @@ namespace GTAVehicles
             {
                 options.ClientId = Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                options.Events = new OAuthEvents
+                {
+                    OnRemoteFailure = context =>
+                    {
+                        context.HandleResponse();
+                        var error = context.Failure.Message;
+                        return Task.FromResult(0);
+                    }
+                };
             });
 
             services.AddRazorPages();
