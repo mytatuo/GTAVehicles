@@ -16,8 +16,7 @@
 <AuthorizeView>
     <!-- Show this section if the user is logged in -->
     <Authorized>
-        <h1>Hello, @context.User.Identity.Name!</h1>
-        <p>You are an Admin!</p>
+        <h4>Hello, @context.User.Identity.Name!</h4>
     </Authorized>
     <NotAuthorized>
         <h1>Welcome, visitor!</h1>
