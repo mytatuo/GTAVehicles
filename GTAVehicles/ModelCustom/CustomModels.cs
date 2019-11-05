@@ -28,4 +28,5 @@ namespace GTAVehicles.Models
         public string Id { get; set; }
         public string ClassName { get; set; }
     }
+
 }

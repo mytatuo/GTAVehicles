@@ -83,11 +83,10 @@
                             <input class="form-control" type="text"
                                    placeholder="Color associated with this Character"
                                    @bind="SelectedCharacter.CharacterColor" />
-                            <!--RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors">
-                                <Template context="">
-                                    @((context as CharColors))
-                                </Template>
-                            </RadzenDropDown-->
+                            <RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors">
+                                <Template Context="color">
+                                    <div style="background-color: @color;">@color</div></Template>
+                            </RadzenDropDown>
                             <br />
                             <!-- Button to save the character -->
                             <button class="btn btn-primary"
@@ -209,7 +208,7 @@
 
     void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
 
-    string[] CharColors = { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
+    List<string> CharColors = new List<string>() { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 
 }
 
