@@ -89,10 +89,9 @@
                             </RadzenDropDown>
                             <br />
                             <!-- Button to save the character -->
-                            <button class="btn btn-primary"
-                                    @onclick="SaveCharacter">
-                                Save
-                            </button>
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                    Click="SaveCharacter" Text="Save"/>
+
                             <!-- Only show delete button if not a new record -->
                             @if (SelectedCharacter.Id > 0)
                             {
