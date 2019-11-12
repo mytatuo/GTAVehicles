@@ -35,8 +35,8 @@
                         <Columns>
                             <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="20px">
                                 <Template Context="garage">
-                                    <RadzenButton ButtonStyle="ButtonStyle.Primary"
-                                                  Click="@(() => EditGarage(garage))" Icon="edit" Style="align-content:center;">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Success"
+                                                  Click="@(() => EditGarage(garage))" Icon="edit">
                                     </RadzenButton>
                                 </Template>
                             </RadzenGridColumn>
@@ -48,7 +48,7 @@
                     <RadzenGridColumn TItem="GtaplayerCharacters" Property="character" Title="Edit" Width="50px">
                         <Template Context="character">
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
-                                          Click="@(() => EditCharacter(character))" Icon="edit" Style="align-content:center;">
+                                          Click="@(() => EditCharacter(character))" Icon="edit">
                             </RadzenButton>
                         </Template>
                     </RadzenGridColumn>
@@ -80,26 +80,21 @@
                             <input class="form-control" type="text"
                                    placeholder="Character Name"
                                    @bind="SelectedCharacter.CharacterName" />
-                            <input class="form-control" type="text"
-                                   placeholder="Color associated with this Character"
-                                   @bind="SelectedCharacter.CharacterColor" />
-                            <RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors">
+                            <RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors" Placeholder="Associated Color...">
                                 <Template Context="color">
-                                    <div style="background-color: @color;">@color</div></Template>
+                                    <div style="background-color: @color; mix-blend-mode: difference;">@color</div>
+                                </Template>
                             </RadzenDropDown>
                             <br />
                             <!-- Button to save the character -->
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
-                                    Click="SaveCharacter" Text="Save"/>
+                                          Click="SaveCharacter" Text="Save" />
 
                             <!-- Only show delete button if not a new record -->
                             @if (SelectedCharacter.Id > 0)
                             {
                                 <!-- Button to delete the character -->
-                                <button class="btn btn-primary"
-                                        @onclick="DeleteCharacter">
-                                    Delete
-                                </button>
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteCharacter" Text="Delete" />
                             }
                         </div>
                     </div>
