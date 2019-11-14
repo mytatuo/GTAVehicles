@@ -63,15 +63,17 @@
                     Add New Character
                 </button>
             </p>
-        }  @if (ShowPopup)
-        {<!-- This is the popup to create or edit a SelectedCharacter --> <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        }
+        @if (ShowCharPopup)
+        {<!-- This is the popup to create or edit a SelectedCharacter -->
+            <div class="modal" tabindex="-1" style="display:block" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title">Add/Edit Character</h3>
                             <!-- Button to close the popup -->
                             <button type="button" class="close"
-                                    @onclick="ClosePopup">
+                                    @onclick="CloseCharPopup">
                                 <span aria-hidden="true">X</span>
                             </button>
                         </div>
@@ -82,7 +84,7 @@
                                    @bind="SelectedCharacter.CharacterName" />
                             <RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors" Placeholder="Associated Color...">
                                 <Template Context="color">
-                                    <div style="background-color: @color; mix-blend-mode: difference;">@color</div>
+                                    <div style="background-color: @color;">@color</div>
                                 </Template>
                             </RadzenDropDown>
                             <br />
@@ -101,6 +103,40 @@
                 </div>
             </div>
         }
+        @if (ShowGaragePopup)
+        {<!-- This is the popup to create or edit a SelectedGarage -->
+        <div class="modal" tabindex="-1" style="display:block" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add/Edit Garage</h3>
+                        <!-- Button to close the popup -->
+                        <button type="button" class="close"
+                                @onclick="CloseGaragePopup">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <!-- Edit form for the current garage -->
+                    <div class="modal-body">
+                        <input class="form-control" type="text"
+                               placeholder="Garage Name"
+                               @bind="SelectedGarage.GarageName" />
+                        <br />
+                        <!-- Button to save the character -->
+                        <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                      Click="SaveGarage" Text="Save" />
+
+                        <!-- Only show delete button if not a new record -->
+                        @if (SelectedGarage.Id > 0)
+                        {
+                            <!-- Button to delete the character -->
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteGarage" Text="Delete" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
     </Authorized>
     <!-- Show this section if the user is not logged in -->
     <NotAuthorized>
@@ -117,9 +153,9 @@
     List<GtaplayerCharacters> characters;
     GtaplayerCharacters SelectedCharacter;
     List<GtaplayerGarages> garages;
-    bool ShowPopup = false;
-
-
+    GtaplayerGarages SelectedGarage;
+    bool ShowCharPopup = false;
+    bool ShowGaragePopup = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -138,10 +174,10 @@
         }
     }
 
-    void ClosePopup()
+    void CloseCharPopup()
     {
         // Close the Popup
-        ShowPopup = false;
+        ShowCharPopup = false;
     }
 
     void AddNewCharacter()
@@ -153,7 +189,7 @@
         //Set the player to the current user
         SelectedCharacter.PlayerID = player.Id;
         // Open the Popup
-        ShowPopup = true;
+        ShowCharPopup = true;
     }
 
     void EditCharacter(GtaplayerCharacters objGtaplayerCharacter)
@@ -162,13 +198,13 @@
         // as the current character
         SelectedCharacter = objGtaplayerCharacter;
         // Open the Popup
-        ShowPopup = true;
+        ShowCharPopup = true;
     }
 
     async Task SaveCharacter()
     {
         // Close the Popup
-        ShowPopup = false;
+        ShowCharPopup = false;
         // Get the current user
         var user = (await authenticationStateTask).User;
         // A new forecast will have the Id set to 0
@@ -191,7 +227,7 @@
     async Task DeleteCharacter()
     {
         // Close the Popup
-        ShowPopup = false;
+        ShowCharPopup = false;
         // Get the current user
         var user = (await authenticationStateTask).User;
         // Delete the forecast
@@ -200,7 +236,16 @@
         characters = await @Service.GetCharactersAsync(player);
     }
 
+    void CloseGaragePopup()
+    {
+        // Close the Popup
+        ShowGaragePopup = false;
+    }
+
     void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
+
+    async Task SaveGarage() { }
+    async Task DeleteGarage() { }
 
     List<string> CharColors = new List<string>() { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 

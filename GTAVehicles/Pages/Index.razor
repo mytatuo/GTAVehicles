@@ -54,7 +54,7 @@
                                     <div class="VehCell">@vehicle.TrackSpeed</div>
                                 </div>
                                 <div class="VehCenterRow">
-                                    <div class="VehCell"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:100px;" /></div>
+                                    <div class="VehCell"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:100px;" /></div>
                                 </div>
                                 <div class="VehBottomRow">
                                     <div class="VehCell">@vehicle.VehicleModel</div>
