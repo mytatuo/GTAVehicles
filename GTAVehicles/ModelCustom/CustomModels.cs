@@ -29,4 +29,10 @@ namespace GTAVehicles.Models
         public string ClassName { get; set; }
     }
 
+    public class GtavehicleColors
+    {
+        public string ColorName { get; set; }
+        public string BackgroundColor { get; set; }
+        public string ForegroundColor { get; set; }
+    }
 }

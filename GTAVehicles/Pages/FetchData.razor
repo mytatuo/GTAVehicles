@@ -82,9 +82,9 @@
                             <input class="form-control" type="text"
                                    placeholder="Character Name"
                                    @bind="SelectedCharacter.CharacterName" />
-                            <RadzenDropDown @bind-Value="SelectedCharacter.CharacterColor" Data="@CharColors" Placeholder="Associated Color...">
+                            <RadzenDropDown @bind-Value="SelectedGtavehicleColor" Data="@colGtavehicleColors" Placeholder="Associated Color...">
                                 <Template Context="color">
-                                    <div style="background-color: @color;">@color</div>
+                                    <div style="background-color: @((color as GtavehicleColors).BackgroundColor);color: @((color as GtavehicleColors).ForegroundColor); ">@((color as GtavehicleColors).ColorName)</div>
                                 </Template>
                             </RadzenDropDown>
                             <br />
@@ -149,6 +149,8 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
+    GtavehicleColors SelectedGtavehicleColor;
+    List<GtavehicleColors> colGtavehicleColors = new List<GtavehicleColors>();
     Gtaplayers player;
     List<GtaplayerCharacters> characters;
     GtaplayerCharacters SelectedCharacter;
@@ -172,6 +174,8 @@
             // Get the garage(s) for a character
             garages = await @Service.GetGaragesAsync(SelectedCharacter);
         }
+
+        getGtavehicleColors();
     }
 
     void CloseCharPopup()
@@ -244,10 +248,36 @@
 
     void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
 
-    async Task SaveGarage() { }
-    async Task DeleteGarage() { }
-
     List<string> CharColors = new List<string>() { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 
+    void getGtavehicleColors()
+    {
+        colGtavehicleColors = new List<GtavehicleColors>();
+
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Beige", BackgroundColor = "Beige", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Black", BackgroundColor = "Black", ForegroundColor = "White" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Blue", BackgroundColor = "Blue", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Brown", BackgroundColor = "Brown", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Cyan", BackgroundColor = "Cyan", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Gold", BackgroundColor = "Gold", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Gray", BackgroundColor = "Gray", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Green", BackgroundColor = "Green", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Indigo", BackgroundColor = "Indigo", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Lime", BackgroundColor = "Lime", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Magenta", BackgroundColor = "Magenta", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Maroon", BackgroundColor = "Maroon", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Navy", BackgroundColor = "Navy", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Olive", BackgroundColor = "Olive", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Orange", BackgroundColor = "Orange", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Pink", BackgroundColor = "Pink", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Purple", BackgroundColor = "Purple", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Red", BackgroundColor = "Red", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Silver", BackgroundColor = "Silver", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Teal", BackgroundColor = "Teal", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Turquoise", BackgroundColor = "Turquoise", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Violet", BackgroundColor = "Violet", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "White", BackgroundColor = "White", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Yellow", BackgroundColor = "Yellow", ForegroundColor = "Black" });
+    }
 }
 
