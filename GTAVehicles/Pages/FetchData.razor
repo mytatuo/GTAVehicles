@@ -105,37 +105,37 @@
         }
         @if (ShowGaragePopup)
         {<!-- This is the popup to create or edit a SelectedGarage -->
-        <div class="modal" tabindex="-1" style="display:block" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">Add/Edit Garage</h3>
-                        <!-- Button to close the popup -->
-                        <button type="button" class="close"
-                                @onclick="CloseGaragePopup">
-                            <span aria-hidden="true">X</span>
-                        </button>
-                    </div>
-                    <!-- Edit form for the current garage -->
-                    <div class="modal-body">
-                        <input class="form-control" type="text"
-                               placeholder="Garage Name"
-                               @bind="SelectedGarage.GarageName" />
-                        <br />
-                        <!-- Button to save the character -->
-                        <RadzenButton ButtonStyle="ButtonStyle.Secondary"
-                                      Click="SaveGarage" Text="Save" />
+            <div class="modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add/Edit Garage</h3>
+                            <!-- Button to close the popup -->
+                            <button type="button" class="close"
+                                    @onclick="CloseGaragePopup">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <!-- Edit form for the current garage -->
+                        <div class="modal-body">
+                            <input class="form-control" type="text"
+                                   placeholder="Garage Name"
+                                   @bind="SelectedGarage.GarageName" />
+                            <br />
+                            <!-- Button to save the character -->
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                          Click="SaveGarage" Text="Save" />
 
-                        <!-- Only show delete button if not a new record -->
-                        @if (SelectedGarage.Id > 0)
-                        {
-                            <!-- Button to delete the garage -->
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteGarage" Text="Delete" />
-                        }
+                            <!-- Only show delete button if not a new record -->
+                            @if (SelectedGarage.Id > 0)
+                            {
+                                <!-- Button to delete the garage -->
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteGarage" Text="Delete" />
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         }
     </Authorized>
     <!-- Show this section if the user is not logged in -->
@@ -201,6 +201,9 @@
         // Set the selected character
         // as the current character
         SelectedCharacter = objGtaplayerCharacter;
+        SelectedGtavehicleColor = (from colors in colGtavehicleColors
+                                   where colors.ColorName == objGtaplayerCharacter.CharacterColor
+                                   select colors).FirstOrDefault();
         // Open the Popup
         ShowCharPopup = true;
     }
@@ -209,9 +212,13 @@
     {
         // Close the Popup
         ShowCharPopup = false;
+        // Set associated color to dropdown choice (black if nothing selected)
+        if (SelectedGtavehicleColor != null) { SelectedCharacter.CharacterColor = SelectedGtavehicleColor.ColorName; }
+        else { SelectedCharacter.CharacterColor = "Black"; }
+
         // Get the current user
         var user = (await authenticationStateTask).User;
-        // A new forecast will have the Id set to 0
+        // A new character will have the Id set to 0
         if (SelectedCharacter.Id == 0)
         {
             // Save the result
@@ -248,6 +255,9 @@
 
     void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
 
+    async Task SaveGarage() { }
+    async Task DeleteGarage() { }
+
     List<string> CharColors = new List<string>() { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 
     void getGtavehicleColors()
@@ -256,24 +266,24 @@
 
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Beige", BackgroundColor = "Beige", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Black", BackgroundColor = "Black", ForegroundColor = "White" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Blue", BackgroundColor = "Blue", ForegroundColor = "Black" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Brown", BackgroundColor = "Brown", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Blue", BackgroundColor = "Blue", ForegroundColor = "White" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Brown", BackgroundColor = "Brown", ForegroundColor = "White" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Cyan", BackgroundColor = "Cyan", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Gold", BackgroundColor = "Gold", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Gray", BackgroundColor = "Gray", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Green", BackgroundColor = "Green", ForegroundColor = "Black" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Indigo", BackgroundColor = "Indigo", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Indigo", BackgroundColor = "Indigo", ForegroundColor = "White" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Lime", BackgroundColor = "Lime", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Magenta", BackgroundColor = "Magenta", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Maroon", BackgroundColor = "Maroon", ForegroundColor = "Black" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Navy", BackgroundColor = "Navy", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Navy", BackgroundColor = "Navy", ForegroundColor = "White" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Olive", BackgroundColor = "Olive", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Orange", BackgroundColor = "Orange", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Pink", BackgroundColor = "Pink", ForegroundColor = "Black" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Purple", BackgroundColor = "Purple", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Purple", BackgroundColor = "Purple", ForegroundColor = "White" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Red", BackgroundColor = "Red", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Silver", BackgroundColor = "Silver", ForegroundColor = "Black" });
-        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Teal", BackgroundColor = "Teal", ForegroundColor = "Black" });
+        colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Teal", BackgroundColor = "Teal", ForegroundColor = "White" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Turquoise", BackgroundColor = "Turquoise", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Violet", BackgroundColor = "Violet", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "White", BackgroundColor = "White", ForegroundColor = "Black" });
