@@ -97,8 +97,9 @@ namespace GTAVehicles.Data
             List<GtaplayerCharacters> colGTACharacters = new List<GtaplayerCharacters>();
             // get GTA Player's Characters
 
+            // only get character(s) for the current logged-in user
             colGTACharacters = (from gtacharacter in _context.GtaplayerCharacters
-                                    // only get character(s) for the current logged-in user
+                                .Include(GtaplayerGarage => GtaplayerGarage.GtaplayerGarages)
                                 where gtacharacter.PlayerID == player.Id
                                 select gtacharacter).ToList();
 
@@ -162,7 +163,7 @@ namespace GTAVehicles.Data
             // get GTA Garages under a particular Character
 
             colGTAGarages = (from gtagarage in _context.GtaplayerGarages
-                             where gtagarage.CharacterId == 1
+                             where gtagarage.CharacterId == character.Id
                              select gtagarage).ToList();
 
             return Task.FromResult(colGTAGarages);

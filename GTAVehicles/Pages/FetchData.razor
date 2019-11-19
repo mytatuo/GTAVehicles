@@ -31,9 +31,13 @@
         {
             <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@characters" TItem="GtaplayerCharacters" ColumnWidth="200px">
                 <Template Context="character">
+                    <!-- Character Garages -->
                     <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="character.GtaplayerGarages" TItem="GtaplayerGarages">
                         <Columns>
-                            <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="20px">
+                            <RadzenCard Style="margin-bottom:20px">
+                                <p>My Card</p>
+                            </RadzenCard>
+                            <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="75px">
                                 <Template Context="garage">
                                     <RadzenButton ButtonStyle="ButtonStyle.Success"
                                                   Click="@(() => EditGarage(garage))" Icon="edit">
@@ -170,9 +174,6 @@
 
             // Get the character(s) for that player
             characters = await @Service.GetCharactersAsync(player);
-
-            // Get the garage(s) for a character
-            garages = await @Service.GetGaragesAsync(SelectedCharacter);
         }
 
         getGtavehicleColors();
