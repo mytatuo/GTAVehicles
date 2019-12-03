@@ -29,13 +29,20 @@
         }
         else
         {
+            <p>
+                <!-- Add a new character -->
+                <RadzenButton ButtonStyle="ButtonStyle.Success"
+                              Click="AddNewCharacter" Text="Add New Character" />
+            </p>
             <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@characters" TItem="GtaplayerCharacters" ColumnWidth="200px">
                 <Template Context="character">
                     <!-- Character Garages -->
                     <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="character.GtaplayerGarages" TItem="GtaplayerGarages">
                         <Columns>
                             <RadzenCard Style="margin-bottom:20px">
-                                <p>My Card</p>
+                                <!-- Add a new garage -->
+                                <RadzenButton ButtonStyle="ButtonStyle.Success"
+                                              Click="AddNewGarage" Text="Add New Garage" />
                             </RadzenCard>
                             <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="75px">
                                 <Template Context="garage">
@@ -60,13 +67,6 @@
                     <RadzenGridColumn TItem="GtaplayerCharacters" Property="CharacterColor" Title="Associated Color" />
                 </Columns>
             </RadzenGrid>
-            <p>
-                <!-- Add a new character -->
-                <button class="btn btn-primary"
-                        @onclick="AddNewCharacter">
-                    Add New Character
-                </button>
-            </p>
         }
         @if (ShowCharPopup)
         {<!-- This is the popup to create or edit a SelectedCharacter -->
@@ -82,15 +82,21 @@
                             </button>
                         </div>
                         <!-- Edit form for the current character -->
-                        <div class="modal-body">
-                            <input class="form-control" type="text"
-                                   placeholder="Character Name"
-                                   @bind="SelectedCharacter.CharacterName" />
-                            <RadzenDropDown @bind-Value="SelectedGtavehicleColor" Data="@colGtavehicleColors" Placeholder="Associated Color...">
-                                <Template Context="color">
-                                    <div style="background-color: @((color as GtavehicleColors).BackgroundColor);color: @((color as GtavehicleColors).ForegroundColor); ">@((color as GtavehicleColors).ColorName)</div>
-                                </Template>
-                            </RadzenDropDown>
+                        <div class="modal-body">                         
+                            
+                            <div class="row">
+                                <div class="align-items-center d-flex col-md-6">
+                                    <RadzenTextBox Placeholder="Character Name" @bind-Value="@SelectedCharacter.CharacterName" Style="margin-bottom: 20px" />
+                                </div>
+                                <div class="col-md-6">
+                                    <RadzenDropDown @bind-Value="SelectedGtavehicleColor" Data="@colGtavehicleColors" Placeholder="Associated Color...">
+                                        <Template Context="color">
+                                            <div style="background-color: @((color as GtavehicleColors).BackgroundColor);color: @((color as GtavehicleColors).ForegroundColor); ">@((color as GtavehicleColors).ColorName)</div>
+                                        </Template>
+                                    </RadzenDropDown>
+                                </div>
+                            </div>
+
                             <br />
                             <!-- Button to save the character -->
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
@@ -254,7 +260,20 @@
         ShowGaragePopup = false;
     }
 
-    void EditGarage(GtaplayerGarages objGtaplayerGarage) { }
+    void AddNewGarage()
+    {
+        // Create new Garage for Character
+        SelectedGarage = new GtaplayerGarages() { Character = SelectedCharacter };
+        // Open the Popup
+        ShowGaragePopup = true;
+    }
+
+    void EditGarage(GtaplayerGarages objGtaplayerGarage) {
+        // Set teh selected garage
+        SelectedGarage = objGtaplayerGarage;
+        // Open the Popup
+        ShowGaragePopup = true;
+    }
 
     async Task SaveGarage() { }
     async Task DeleteGarage() { }
