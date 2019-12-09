@@ -168,5 +168,13 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(colGTAGarages);
         }
+
+        public Task<GtaplayerGarages> CreateGarageAsync(GtaplayerGarages objGtaplayerGarage)
+        {
+            _context.GtaplayerGarages.Add(objGtaplayerGarage);
+            _context.SaveChanges();
+
+            return Task.FromResult(objGtaplayerGarage);
+        }
     }
 }

@@ -82,8 +82,8 @@
                             </button>
                         </div>
                         <!-- Edit form for the current character -->
-                        <div class="modal-body">                         
-                            
+                        <div class="modal-body">
+
                             <div class="row">
                                 <div class="align-items-center d-flex col-md-6">
                                     <RadzenTextBox Placeholder="Character Name" @bind-Value="@SelectedCharacter.CharacterName" Style="margin-bottom: 20px" />
@@ -132,7 +132,7 @@
                                    placeholder="Garage Name"
                                    @bind="SelectedGarage.GarageName" />
                             <br />
-                            <!-- Button to save the character -->
+                            <!-- Button to save the garage -->
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
                                           Click="SaveGarage" Text="Save" />
 
@@ -238,7 +238,7 @@
             var result =
             @Service.UpdateCharacterAsync(SelectedCharacter);
         }
-        // Get the forecasts for the current user
+        // Get the characters for the current user
         characters = await @Service.GetCharactersAsync(player);
     }
 
@@ -268,21 +268,35 @@
         ShowGaragePopup = true;
     }
 
-    void EditGarage(GtaplayerGarages objGtaplayerGarage) {
+    void EditGarage(GtaplayerGarages objGtaplayerGarage)
+    {
         // Set teh selected garage
         SelectedGarage = objGtaplayerGarage;
         // Open the Popup
         ShowGaragePopup = true;
     }
 
-    async Task SaveGarage() { }
-    async Task DeleteGarage() { }
+    async Task SaveGarage()
+    {
+        CloseGaragePopup();
+        if (SelectedGarage.Id == 0)
+        {
+            var result = @Service.CreateGarageAsync(SelectedGarage);
+        }
 
-    List<string> CharColors = new List<string>() { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
+        garages = await @Service.GetGaragesAsync(SelectedCharacter);
+    }
+
+    async Task DeleteGarage() { CloseGaragePopup(); }
+
+    List<string>
+    CharColors = new List<string>
+        () { "Beige", "Black", "Blue", "Brown", "Cyan", "Gold", "Gray", "Green", "Indigo", "Lime", "Magenta", "Maroon", "Navy", "Olive", "Orange", "Pink", "Purple", "Red", "Silver", "Teal", "Turquoise", "Violet", "White", "Yellow" };
 
     void getGtavehicleColors()
     {
-        colGtavehicleColors = new List<GtavehicleColors>();
+        colGtavehicleColors = new List<GtavehicleColors>
+            ();
 
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Beige", BackgroundColor = "Beige", ForegroundColor = "Black" });
         colGtavehicleColors.Add(new GtavehicleColors { ColorName = "Black", BackgroundColor = "Black", ForegroundColor = "White" });
