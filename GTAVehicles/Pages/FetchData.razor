@@ -278,10 +278,16 @@
 
     async Task SaveGarage()
     {
+        // Close the Popup
         CloseGaragePopup();
+
         if (SelectedGarage.Id == 0)
         {
             var result = @Service.CreateGarageAsync(SelectedGarage);
+        }
+        else
+        {
+            var result = Service.UpdateGarageAsync(SelectedGarage);
         }
 
         garages = await @Service.GetGaragesAsync(SelectedCharacter);

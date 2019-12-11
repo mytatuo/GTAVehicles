@@ -176,5 +176,27 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(objGtaplayerGarage);
         }
+
+        public Task<bool> UpdateGarageAsync(GtaplayerGarages objGtaplayerGarage)
+        {
+            var ExistingGarage =
+                _context.GtaplayerGarages
+                .Where(x => x.Id == objGtaplayerGarage.Id)
+                .FirstOrDefault();
+
+            if (ExistingGarage != null)
+            {
+                ExistingGarage.GarageName =
+                    objGtaplayerGarage.GarageName;
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
     }
 }
