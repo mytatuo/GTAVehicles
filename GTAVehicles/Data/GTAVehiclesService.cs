@@ -198,5 +198,24 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(true);
         }
+
+        public Task<bool> DeleteGarageAsync(GtaplayerGarages objGtaplayerGarage)
+        {
+            var ExistingGarage =
+                _context.GtaplayerGarages
+                .Where(x => x.Id == objGtaplayerGarage.Id)
+                .FirstOrDefault();
+            if (ExistingGarage != null)
+            {
+                _context.GtaplayerGarages.Remove(ExistingGarage);
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
     }
 }

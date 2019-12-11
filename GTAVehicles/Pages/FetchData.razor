@@ -293,7 +293,13 @@
         garages = await @Service.GetGaragesAsync(SelectedCharacter);
     }
 
-    async Task DeleteGarage() { CloseGaragePopup(); }
+    async Task DeleteGarage()
+    {
+        CloseGaragePopup();
+        var result = @Service.DeleteGarageAsync(SelectedGarage);
+        // Get the forecasts for the current user
+        garages = await @Service.GetGaragesAsync(SelectedCharacter);
+    }
 
     List<string>
     CharColors = new List<string>
