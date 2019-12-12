@@ -34,7 +34,7 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Success"
                               Click="AddNewCharacter" Text="Add New Character" />
             </p>
-            <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@characters" TItem="GtaplayerCharacters" ColumnWidth="200px">
+            <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@characters" RowExpand="@CharacterRowExpanded" TItem="GtaplayerCharacters" ColumnWidth="200px">
                 <Template Context="character">
                     <!-- Character Garages -->
                     <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="character.GtaplayerGarages" TItem="GtaplayerGarages">
@@ -42,7 +42,7 @@
                             <RadzenCard Style="margin-bottom:20px">
                                 <!-- Add a new garage -->
                                 <RadzenButton ButtonStyle="ButtonStyle.Success"
-                                              Click="AddNewGarage" Text="Add New Garage" />
+                                              Click="@(() => AddNewGarage(character))" Text="Add New Garage" />
                             </RadzenCard>
                             <RadzenGridColumn TItem="GtaplayerGarages" Property="garage" Title="Edit" Width="75px">
                                 <Template Context="garage">
@@ -169,6 +169,12 @@
     bool ShowCharPopup = false;
     bool ShowGaragePopup = false;
 
+    void CharacterRowExpanded(GtaplayerCharacters paramCharacter)
+    {
+        // Set the Global Character
+        SelectedCharacter = paramCharacter;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         // Get the current user
@@ -260,10 +266,10 @@
         ShowGaragePopup = false;
     }
 
-    void AddNewGarage()
+    async Task AddNewGarage(GtaplayerCharacters paramCharacter)
     {
         // Create new Garage for Character
-        SelectedGarage = new GtaplayerGarages() { Character = SelectedCharacter };
+        SelectedGarage = new GtaplayerGarages() { Character = paramCharacter };
         // Open the Popup
         ShowGaragePopup = true;
     }
