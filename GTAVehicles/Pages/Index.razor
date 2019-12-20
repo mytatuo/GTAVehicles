@@ -47,21 +47,21 @@
             <RadzenTabsItem Text="DataList">
                 <RadzenDataList @ref="DataListRef" WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
                     <Template Context="vehicle">
-                        <RadzenCard Style="width:300px;">
-                            <div class="vehTable">
-                                <div class="vehTopRow">
-                                    <div class="VehCell">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
-                                    <div class="VehCell">@vehicle.TrackSpeed</div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-8">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
+                                    <div class="col-md-4 align-items-end">@vehicle.TrackSpeed</div>
                                 </div>
-                                <div class="VehCenterRow">
-                                    <div class="VehCell"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:100px;" /></div>
+                                <div class="row">
+                                    <div class="col-md-12 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" /></div>
                                 </div>
-                                <div class="VehBottomRow">
-                                    <div class="VehCell">@vehicle.VehicleModel</div>
-                                    <div class="VehCell">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
+                                <div class="row">
+                                    <div class="col-md-8"><h3>@vehicle.VehicleModel.ToUpper()</h3></div>
+                                    <div class="col-md-4 align-items-end">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
                                 </div>
                             </div>
-                        </RadzenCard>
+                        </div>
                     </Template>
                 </RadzenDataList>
             </RadzenTabsItem>
