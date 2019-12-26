@@ -54,7 +54,7 @@
                                     <div class="col-md-4 align-items-end">@vehicle.TrackSpeed</div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" /></div>
+                                    <div class="col-md-12 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="ShowVehicleDetail" /></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-8"><h3>@vehicle.VehicleModel.ToUpper()</h3></div>
@@ -97,9 +97,12 @@
     List<GtavehicleDropdownClass> vehicleClasses = new List<GtavehicleDropdownClass>();
     IQueryable<GTAVehiclesRanked> vehicles;
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
+    bool ShowVehiclePopup;
 
     protected override async Task OnInitializedAsync()
     {
+        ShowVehiclePopup = false;
+
         // Get the current user
         var user = (await authenticationStateTask).User;
 
@@ -169,4 +172,8 @@
         }
     }
 
+    void ShowVehicleDetail()
+    {
+        ShowVehiclePopup = true;
+    }
 }
