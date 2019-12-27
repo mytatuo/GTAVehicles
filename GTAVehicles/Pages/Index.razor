@@ -107,12 +107,42 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        test
+                        <p>Vehicle Details</p>
                     </div>
+                    <AuthorizeView>
+                        <!-- Show this section if the user is logged in -->
+                        <Authorized>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <RadzenDropDown AllowFiltering="false"
+                                                    @bind-Value="SelectedCharacterId"
+                                                    Data="@characters"
+                                                    TextProperty="UserName"
+                                                    ValueProperty="Id"
+                                                    Change="PerformGarageSearch"
+                                                    Style="margin-bottom: 20px; width:250px;" />
+
+                                    @*<RadzenDropDown AllowFiltering="false"
+                                                    AllowClear="true"
+                                                    @bind-Value="garages"
+                                                    Multiple="true"
+                                                    Placeholder="Filter by Garage(s)..."
+                                                    Data="@vehicleClasses"
+                                                    TextProperty="ClassName"
+                                                    ValueProperty="Id"
+                                                    Change="PerformSearch"
+                                                    Style="margin-bottom: 20px; width:250px;" />*@
+                                </div>
+                            </div>
+
+
+                        </Authorized>
+                    </AuthorizeView>
+
                 </div>
             </div>
-            </div>
         </div>
+    </div>
 }
 
 @code {
@@ -126,6 +156,10 @@
     IQueryable<GTAVehiclesRanked> vehicles;
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
     bool ShowVehiclePopup;
+
+    List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
+    string SelectedCharacterId;
+    List<GtaplayerGarages> garages;
 
     protected override async Task OnInitializedAsync()
     {
@@ -145,6 +179,14 @@
                 Gtaplayers NewGtAPlayer = new Gtaplayers();
                 NewGtAPlayer.UserName = user.Identity.Name;
                 var result = @Service.CreatePlayerAsync(NewGtAPlayer);
+            }
+
+            // Get the character(s) for that player
+            var colCharacters = await @Service.GetCharactersAsync(player);
+
+            foreach (var item in colCharacters)
+            {
+                characters.Add(new GtacharactersDTO { Id = item.Id.ToString(), UserName = item.CharacterName });
             }
         }
 
@@ -198,6 +240,16 @@
             List<int> DefaultValue = new List<int>() { 0 };
             vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
         }
+    }
+
+    async Task PerformGarageSearch()
+    {
+        strerror = "";
+        if (SelectedCharacterId != null)
+        {
+            // Fill a collection of all the garages for the selected Player
+        }
+
     }
 
     void ShowVehicleDetail()
