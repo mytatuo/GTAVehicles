@@ -45,23 +45,27 @@
     <RadzenTabs>
         <Tabs>
             <RadzenTabsItem Text="DataList">
-                <RadzenDataList @ref="DataListRef" WrapItems="true" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
+                <RadzenDataList @ref="DataListRef" WrapItems="true" PageSize="12" AllowPaging="true" Data="vehicles" TItem="GTAVehiclesRanked">
                     <Template Context="vehicle">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-8">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
-                                    <div class="col-md-4 align-items-end">@vehicle.TrackSpeed</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="ShowVehicleDetail" /></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8"><h3>@vehicle.VehicleModel.ToUpper()</h3></div>
-                                    <div class="col-md-4 align-items-end">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
+                        <RadzenCard Style="width:320px; margin-bottom: 20px; height:260px;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">#@vehicle.TrackRankInClass in <b>@vehicle.ClassName</b></div>
+                                        <div class="col-md-4 align-items-end">@vehicle.TrackSpeed</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1">&nbsp;</div>
+                                        <div class="col-md-10 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="ShowVehicleDetail" /></div>
+                                        <div class="col-md-1">&nbsp;</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8"><h3>@vehicle.VehicleModel.ToUpper()</h3></div>
+                                        <div class="col-md-4 align-items-end">@(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", vehicle.DragSpeed)) mph</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </RadzenCard>
                     </Template>
                 </RadzenDataList>
             </RadzenTabsItem>
@@ -92,21 +96,23 @@
 {<!-- This is the popup to view Vehicle details -->
     <div class="modal" tabindex="-1" style="display:block" role="dialog">
         <div class="modal-dialog">
-            <div class="modal-header">
-                <h3 class="modal-title">Vehicle Detail</h3>
-                <!-- Button to close the popup -->
-                <button type="button" class="close"
-                        @onclick="CloseVehiclePopup">
-                    <span aria-hidden="true">X</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    test
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Vehicle Detail</h3>
+                    <!-- Button to close the popup -->
+                    <button type="button" class="close"
+                            @onclick="CloseVehiclePopup">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        test
+                    </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
 }
 
 @code {
