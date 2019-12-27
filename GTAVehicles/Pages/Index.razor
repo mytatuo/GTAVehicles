@@ -87,6 +87,28 @@
         </Tabs>
     </RadzenTabs>
 }
+
+@if (ShowVehiclePopup)
+{<!-- This is the popup to view Vehicle details -->
+    <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Vehicle Detail</h3>
+                <!-- Button to close the popup -->
+                <button type="button" class="close"
+                        @onclick="CloseVehiclePopup">
+                    <span aria-hidden="true">X</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    test
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
@@ -175,5 +197,11 @@
     void ShowVehicleDetail()
     {
         ShowVehiclePopup = true;
+    }
+
+    void CloseVehiclePopup()
+    {
+        // Close the Popup
+        ShowVehiclePopup = false;
     }
 }
