@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1">&nbsp;</div>
-                                        <div class="col-md-10 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="ShowVehicleDetail" /></div>
+                                        <div class="col-md-10 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="@(() => ShowVehicleDetail(vehicle))" /></div>
                                         <div class="col-md-1">&nbsp;</div>
                                     </div>
                                     <div class="row">
@@ -107,7 +107,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <p>Vehicle Details</p>
+                        <div class="col-md-6">
+                            <p>Vehicle Details</p>
+                        </div>
                     </div>
                     <AuthorizeView>
                         <!-- Show this section if the user is logged in -->
@@ -123,15 +125,15 @@
                                                     Style="margin-bottom: 20px; width:250px;" />
 
                                     @*<RadzenDropDown AllowFiltering="false"
-                                                    AllowClear="true"
-                                                    @bind-Value="garages"
-                                                    Multiple="true"
-                                                    Placeholder="Filter by Garage(s)..."
-                                                    Data="@vehicleClasses"
-                                                    TextProperty="ClassName"
-                                                    ValueProperty="Id"
-                                                    Change="PerformSearch"
-                                                    Style="margin-bottom: 20px; width:250px;" />*@
+                                        AllowClear="true"
+                                        @bind-Value="garages"
+                                        Multiple="true"
+                                        Placeholder="Filter by Garage(s)..."
+                                        Data="@vehicleClasses"
+                                        TextProperty="ClassName"
+                                        ValueProperty="Id"
+                                        Change="PerformSearch"
+                                        Style="margin-bottom: 20px; width:250px;" />*@
                                 </div>
                             </div>
 
@@ -252,7 +254,7 @@
 
     }
 
-    void ShowVehicleDetail()
+    async Task ShowVehicleDetail(GTAVehiclesRanked SelectedVehicle)
     {
         ShowVehiclePopup = true;
     }
