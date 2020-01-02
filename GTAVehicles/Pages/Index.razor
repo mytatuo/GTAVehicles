@@ -108,7 +108,16 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p>Vehicle Details</p>
+                            <h3>@SelectedVehicle.VehicleModel</h3>
+                            <p>
+                                <b>Vehicle Class:</b> @SelectedVehicle.ClassName<br />
+                                <b>Best Track Speed:</b> @SelectedVehicle.TrackSpeed<br />
+                                <b>Track Rank (overall):</b> @SelectedVehicle.TrackRank<br />
+                                <b>Track Rank (in class):</b> @SelectedVehicle.TrackRankInClass<br />
+                                <b>Top Straight-Line Speed:</b> @(String.Format(new System.Globalization.CultureInfo("en-US"), "{0:F}", SelectedVehicle.DragSpeed)) mph<br />
+                                <b>Drag Rank (overall):</b> @SelectedVehicle.DragRank<br />
+                                <b>Drag Rank (in class):</b> @SelectedVehicle.DragRankInClass
+                            </p>
                         </div>
                     </div>
                     <AuthorizeView>
@@ -136,11 +145,8 @@
                                         Style="margin-bottom: 20px; width:250px;" />*@
                                 </div>
                             </div>
-
-
                         </Authorized>
                     </AuthorizeView>
-
                 </div>
             </div>
         </div>
@@ -157,6 +163,7 @@
     List<GtavehicleDropdownClass> vehicleClasses = new List<GtavehicleDropdownClass>();
     IQueryable<GTAVehiclesRanked> vehicles;
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
+    GTAVehiclesRanked SelectedVehicle;
     bool ShowVehiclePopup;
 
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
@@ -254,9 +261,10 @@
 
     }
 
-    async Task ShowVehicleDetail(GTAVehiclesRanked SelectedVehicle)
+    async Task ShowVehicleDetail(GTAVehiclesRanked VehicleClicked)
     {
         ShowVehiclePopup = true;
+        SelectedVehicle = VehicleClicked;
     }
 
     void CloseVehiclePopup()
