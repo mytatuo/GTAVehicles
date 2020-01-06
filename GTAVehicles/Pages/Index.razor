@@ -130,18 +130,16 @@
                                                     Data="@characters"
                                                     TextProperty="UserName"
                                                     ValueProperty="Id"
-                                                    Change="PerformGarageSearch"
                                                     Style="margin-bottom: 20px; width:250px;" />
 
                                     @*<RadzenDropDown AllowFiltering="false"
                                         AllowClear="true"
-                                        @bind-Value="garages"
-                                        Multiple="true"
+                                        @bind-Value="SelectedGarageId"
+                                        Multiple="false"
                                         Placeholder="Filter by Garage(s)..."
-                                        Data="@vehicleClasses"
-                                        TextProperty="ClassName"
+                                        Data="@(garages.Where(o => o.CharacterId == SelectedCharacterId))"
+                                        TextProperty="GarageName"
                                         ValueProperty="Id"
-                                        Change="PerformSearch"
                                         Style="margin-bottom: 20px; width:250px;" />*@
                                 </div>
                             </div>
@@ -167,7 +165,8 @@
     bool ShowVehiclePopup;
 
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
-    string SelectedCharacterId;
+    int SelectedCharacterId = -1;
+    int SelectedGarageId;
     List<GtaplayerGarages> garages;
 
     protected override async Task OnInitializedAsync()
@@ -254,7 +253,7 @@
     async Task PerformGarageSearch()
     {
         strerror = "";
-        if (SelectedCharacterId != null)
+        if (SelectedCharacterId > 0)
         {
             // Fill a collection of all the garages for the selected Player
         }
