@@ -132,15 +132,15 @@
                                                     ValueProperty="Id"
                                                     Style="margin-bottom: 20px; width:250px;" />
 
-                                    @*<RadzenDropDown AllowFiltering="false"
+                                    <RadzenDropDown AllowFiltering="false"
                                         AllowClear="true"
                                         @bind-Value="SelectedGarageId"
                                         Multiple="false"
                                         Placeholder="Filter by Garage(s)..."
-                                        Data="@(garages.Where(o => o.CharacterId == SelectedCharacterId))"
+                                        Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
                                         TextProperty="GarageName"
                                         ValueProperty="Id"
-                                        Style="margin-bottom: 20px; width:250px;" />*@
+                                        Style="margin-bottom: 20px; width:250px;" />
                                 </div>
                             </div>
                         </Authorized>
@@ -166,8 +166,8 @@
 
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
     string SelectedCharacterId = "";
-    int SelectedGarageId;
-    List<GtaplayerGarages> garages;
+    string SelectedGarageId;
+    List<GtaplayerGarages> garages = new List<GtaplayerGarages>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -188,6 +188,9 @@
                 NewGtAPlayer.UserName = user.Identity.Name;
                 var result = @Service.CreatePlayerAsync(NewGtAPlayer);
             }
+
+            // Get the Garages for the logged in user
+            garages = await @Service.GetGaragesForPlayerAsync(player);
 
             // Get the character(s) for that player
             var colCharacters = await @Service.GetCharactersAsync(player);
@@ -248,16 +251,6 @@
             List<int> DefaultValue = new List<int>() { 0 };
             vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
         }
-    }
-
-    async Task PerformGarageSearch()
-    {
-        strerror = "";
-        if (SelectedCharacterId == "")
-        {
-            // Fill a collection of all the garages for the selected Player
-        }
-
     }
 
     async Task ShowVehicleDetail(GTAVehiclesRanked VehicleClicked)

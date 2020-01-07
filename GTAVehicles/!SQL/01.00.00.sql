@@ -190,7 +190,7 @@ BEGIN
 CREATE TABLE [dbo].[GTAPlayerGarages](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[GarageID] [int] NULL,
-	[CharacterID] [int] NULL,
+	[CharacterID] [int] NOT NULL,
 	[GarageName] [nvarchar](255) NULL,
  CONSTRAINT [PK__GTAGarag__3214EC27C163AB70] PRIMARY KEY CLUSTERED 
 (

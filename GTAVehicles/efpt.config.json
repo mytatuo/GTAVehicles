@@ -1,1 +1,58 @@
-﻿{"ContextClassName":"GTAContext","DefaultDacpacSchema":null,"IdReplace":false,"IncludeConnectionString":false,"OutputPath":"Models","ProjectRootNamespace":"GTAVehicles","SelectedToBeGenerated":0,"Tables":[{"HasPrimaryKey":true,"Name":"dbo.GTAGarages"},{"HasPrimaryKey":true,"Name":"dbo.GTAPlayerCharacters"},{"HasPrimaryKey":true,"Name":"dbo.GTAPlayerGarages"},{"HasPrimaryKey":true,"Name":"dbo.GTAPlayers"},{"HasPrimaryKey":true,"Name":"dbo.GTAPlayerVehicleMods"},{"HasPrimaryKey":true,"Name":"dbo.GTAPlayerVehicles"},{"HasPrimaryKey":true,"Name":"dbo.GTAVehicleClass"},{"HasPrimaryKey":true,"Name":"dbo.GTAVehicleModTypes"},{"HasPrimaryKey":true,"Name":"dbo.GTAVehicles"}],"UseDatabaseNames":false,"UseFluentApiOnly":true,"UseHandleBars":false,"UseInflector":false}
+﻿{
+   "ContextClassName": "GTAContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "DoNotCombineNamespace": false,
+   "IdReplace": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "GTAVehicles",
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAGarages]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAPlayerCharacters]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAPlayerGarages]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAPlayers]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAPlayerVehicleMods]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAPlayerVehicles]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAVehicleClass]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAVehicleModTypes]"
+      },
+      {
+         "HasPrimaryKey": true,
+         "Name": "[dbo].[GTAVehicles]"
+      }
+   ],
+   "UseDatabaseNames": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseSpatial": false
+}
