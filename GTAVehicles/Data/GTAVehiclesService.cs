@@ -23,7 +23,7 @@ namespace GTAVehicles.Data
             colGTAPlayer = (from Gtaplayers in _context.Gtaplayers
                                 // only get entries for the current logged-in user
                             where Gtaplayers.UserName == strCurrentUser
-                            select Gtaplayers).FirstOrDefault();
+                            select Gtaplayers).AsNoTracking().FirstOrDefault();
 
             return Task.FromResult(colGTAPlayer);
         }
@@ -42,7 +42,7 @@ namespace GTAVehicles.Data
 
             // get all vehicle classes in GTA
             colGTAVehicleClasses = (from gtaclasses in _context.GtavehicleClass
-                                    select gtaclasses).ToList();
+                                    select gtaclasses).AsNoTracking().ToList();
 
             return Task.FromResult(colGTAVehicleClasses);
         }
@@ -66,7 +66,7 @@ namespace GTAVehicles.Data
                                   TrackRankInClass = x.TrackRankInClass,
                                   TrackSpeed = x.TrackSpeed,
                                   VehicleModel = x.VehicleModel
-                              });
+                              }).AsNoTracking();
 
                 return Task.FromResult(result);
             }
@@ -86,7 +86,7 @@ namespace GTAVehicles.Data
                         TrackRankInClass = x.TrackRankInClass,
                         TrackSpeed = x.TrackSpeed,
                         VehicleModel = x.VehicleModel
-                    }).AsQueryable();
+                    }).AsNoTracking().AsQueryable();
 
                 return Task.FromResult(result);
             }
@@ -101,7 +101,7 @@ namespace GTAVehicles.Data
             colGTACharacters = (from gtacharacter in _context.GtaplayerCharacters
                                 .Include(GtaplayerGarage => GtaplayerGarage.GtaplayerGarages)
                                 where gtacharacter.PlayerId == player.Id
-                                select gtacharacter).ToList();
+                                select gtacharacter).AsNoTracking().ToList();
 
             return Task.FromResult(colGTACharacters);
         }
@@ -120,6 +120,7 @@ namespace GTAVehicles.Data
                 _context.GtaplayerCharacters
                 .Where(x => x.Id == objGtaplayerCharacter.Id)
                 .FirstOrDefault();
+
             if (ExistingCharacter != null)
             {
                 ExistingCharacter.CharacterName =
@@ -144,6 +145,7 @@ namespace GTAVehicles.Data
                 _context.GtaplayerCharacters
                 .Where(x => x.Id == objGtaplayerCharacter.Id)
                 .FirstOrDefault();
+
             if (ExistingCharacter != null)
             {
                 _context.GtaplayerCharacters.Remove(ExistingCharacter);
@@ -164,19 +166,26 @@ namespace GTAVehicles.Data
 
             colGTAGarages = (from gtagarage in _context.GtaplayerGarages
                              where gtagarage.CharacterId == character.Id
-                             select gtagarage).ToList();
+                             select gtagarage).AsNoTracking().ToList();
 
             return Task.FromResult(colGTAGarages);
         }
 
-        public Task<List<GtaplayerGarages>> GetGaragesForPlayerAsync(Gtaplayers player)
+        public Task<List<GtaplayerGaragesDTO>> GetGaragesForPlayerAsync(Gtaplayers player)
         {
-            List<GtaplayerGarages> colGTAGarages = new List<GtaplayerGarages>();
+            List<GtaplayerGaragesDTO> colGTAGarages = new List<GtaplayerGaragesDTO>();
             // get GTA Garages under a particular Player
 
             colGTAGarages = (from gtagarage in _context.GtaplayerGarages
                              where gtagarage.Character.Player.Id == player.Id
-                             select gtagarage).ToList();
+                             select new GtaplayerGaragesDTO
+                             {
+                                 Id = gtagarage.Id.ToString(),
+                                 CharacterId = gtagarage.CharacterId.ToString(),
+                                 GarageId = (gtagarage.GarageId != null) ? gtagarage.GarageId.Value.ToString() : "",
+                                 GarageName = gtagarage.GarageName
+
+                             }).AsNoTracking().ToList();
 
             return Task.FromResult(colGTAGarages);
         }
@@ -217,6 +226,7 @@ namespace GTAVehicles.Data
                 _context.GtaplayerGarages
                 .Where(x => x.Id == objGtaplayerGarage.Id)
                 .FirstOrDefault();
+
             if (ExistingGarage != null)
             {
                 _context.GtaplayerGarages.Remove(ExistingGarage);
