@@ -165,7 +165,7 @@
     bool ShowVehiclePopup;
 
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
-    int SelectedCharacterId = -1;
+    string SelectedCharacterId = "";
     int SelectedGarageId;
     List<GtaplayerGarages> garages;
 
@@ -253,7 +253,7 @@
     async Task PerformGarageSearch()
     {
         strerror = "";
-        if (SelectedCharacterId > 0)
+        if (SelectedCharacterId == "")
         {
             // Fill a collection of all the garages for the selected Player
         }
