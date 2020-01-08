@@ -293,7 +293,7 @@
         }
         else
         {
-            var result = Service.UpdateGarageAsync(SelectedGarage);
+            var result = @Service.UpdateGarageAsync(SelectedGarage);
         }
 
         garages = await @Service.GetGaragesAsync(SelectedCharacter);

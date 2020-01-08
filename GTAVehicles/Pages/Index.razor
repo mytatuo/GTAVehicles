@@ -125,22 +125,24 @@
                         <Authorized>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <h3>Add Vehicle to Garage:</h3>
                                     <RadzenDropDown AllowFiltering="false"
                                                     @bind-Value="SelectedCharacterId"
+                                                    Placeholder="Select Character..."
                                                     Data="@characters"
                                                     TextProperty="UserName"
                                                     ValueProperty="Id"
                                                     Style="margin-bottom: 20px; width:250px;" />
-
                                     <RadzenDropDown AllowFiltering="false"
-                                        AllowClear="true"
-                                        @bind-Value="SelectedGarageId"
-                                        Multiple="false"
-                                        Placeholder="Filter by Garage(s)..."
-                                        Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
-                                        TextProperty="GarageName"
-                                        ValueProperty="Id"
-                                        Style="margin-bottom: 20px; width:250px;" />
+                                                    AllowClear="true"
+                                                    @bind-Value="SelectedGarageId"
+                                                    Multiple="false"
+                                                    Placeholder="Select Garage..."
+                                                    Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
+                                                    TextProperty="GarageName"
+                                                    ValueProperty="Id"
+                                                    Style="margin-bottom: 20px; width:250px;" />
+                                    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@(() => StoreVehicle(SelectedGarageId))" Text="Add Vehicle to Garage" />
                                 </div>
                             </div>
                         </Authorized>
@@ -257,6 +259,13 @@
     {
         ShowVehiclePopup = true;
         SelectedVehicle = VehicleClicked;
+    }
+
+    async Task StoreVehicle(string GarageId)
+    {
+        GtaplayerVehicles StoredVehicle = new GtaplayerVehicles();
+
+        var result = @Service.StoreVehicleAsync(StoredVehicle);
     }
 
     void CloseVehiclePopup()
