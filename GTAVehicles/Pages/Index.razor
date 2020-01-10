@@ -265,7 +265,12 @@
     {
         GtaplayerVehicles StoredVehicle = new GtaplayerVehicles();
 
-        var result = @Service.StoreVehicleAsync(StoredVehicle);
+        StoredVehicle.PlayerGarageId = Convert.ToInt32(GarageId);
+        StoredVehicle.VehicleId = SelectedVehicle.Id;
+        
+        /////////////////////////////////////////////////////////    StoredVehicle.PlayerId = characters.FirstOrDefault().???
+
+        var result = await @Service.StoreVehicleAsync(StoredVehicle);
     }
 
     void CloseVehiclePopup()

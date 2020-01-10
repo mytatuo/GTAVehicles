@@ -240,9 +240,12 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
-        public Task<bool> StoreVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
+        public Task<GtaplayerVehicles> StoreVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
         {
-            return Task.FromResult(false);
+            _context.GtaplayerVehicles.Add(objGtaplayerVehicle);
+            _context.SaveChanges();
+
+            return Task.FromResult(objGtaplayerVehicle);
         }
     }
 }
