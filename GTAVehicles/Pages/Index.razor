@@ -166,6 +166,7 @@
     GTAVehiclesRanked SelectedVehicle;
     bool ShowVehiclePopup;
 
+    Gtaplayers player;
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
     string SelectedCharacterId = "";
     string SelectedGarageId;
@@ -181,14 +182,14 @@
         if (user.Identity.Name != null)
         {
             // Is user in the players table
-            var player = await @Service.GetPlayerAsync(user.Identity.Name);
+            player = await @Service.GetPlayerAsync(user.Identity.Name);
 
             if (player == null)
             {
                 // Add them to the Players table
-                Gtaplayers NewGtAPlayer = new Gtaplayers();
-                NewGtAPlayer.UserName = user.Identity.Name;
-                var result = @Service.CreatePlayerAsync(NewGtAPlayer);
+                Gtaplayers NewGtaplayer = new Gtaplayers();
+                NewGtaplayer.UserName = user.Identity.Name;
+                var result = @Service.CreatePlayerAsync(NewGtaplayer);
             }
 
             // Get the Garages for the logged in user
@@ -267,10 +268,11 @@
 
         StoredVehicle.PlayerGarageId = Convert.ToInt32(GarageId);
         StoredVehicle.VehicleId = SelectedVehicle.Id;
-        
-        /////////////////////////////////////////////////////////    StoredVehicle.PlayerId = characters.FirstOrDefault().???
+        StoredVehicle.PlayerId = player.Id;
 
         var result = await @Service.StoreVehicleAsync(StoredVehicle);
+
+        CloseVehiclePopup();
     }
 
     void CloseVehiclePopup()
