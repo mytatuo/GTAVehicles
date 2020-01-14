@@ -288,7 +288,9 @@
         CloseGaragePopup();
 
         if (SelectedGarage.Id == 0)
-        {
+        {            
+            SelectedGarage.CharacterId = SelectedGarage.Character.Id;
+            SelectedGarage.Character = null;
             var result = @Service.CreateGarageAsync(SelectedGarage);
         }
         else

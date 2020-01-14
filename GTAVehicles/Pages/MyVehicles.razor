@@ -1,0 +1,70 @@
+﻿@page "/myvehicles"
+@using GTAVehicles.Data
+@using GTAVehicles.Models
+@using System.Linq;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@*
+    Using OwningComponentBase ensures that the service and related services
+    that share its scope are disposed with the component.
+    Otherwise DbContext in ForecastService will live for the life of the
+    connection, which may be problematic if clients stay
+    connected for a long time.
+
+    We access WeatherForecastService using @Service
+*@
+@inherits OwningComponentBase<GTAVehiclesService>
+<h3>MyVehicles</h3>
+<AuthorizeView>
+    <!-- Show this section if the user is logged in -->
+    <Authorized>
+        <div class="row">
+            <div class="col-md-6">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="SelectedCharacter.GtaplayerGarages" TItem="GtaplayerGarages">
+                    <Columns>
+                        <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
+                    </Columns>
+                </RadzenGrid>
+
+            </div>
+            <div class="col-md-6">
+                <RadzenCard Style="margin-bottom:20px">
+                    Character: @SelectedCharacter.CharacterName
+                </RadzenCard>
+            </div>
+        </div>
+    </Authorized>
+    <!-- Show this section if the user is not logged in -->
+    <NotAuthorized>
+        <p>You're not signed in. Please click [Log-In] to continue.</p>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    // AuthenticationState is available as a CascadingParameter
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    Gtaplayers player;
+    List<GtaplayerCharacters> characters;
+    GtaplayerCharacters SelectedCharacter;
+    List<GtaplayerGarages> garages;
+    GtaplayerGarages SelectedGarage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get the current user
+        var user = (await authenticationStateTask).User;
+        if (user.Identity.Name != null)
+        {
+            // Get the player object for the current user
+            player = await @Service.GetPlayerAsync(user.Identity.Name);
+
+            // Get the character(s) for that player
+            characters = await @Service.GetCharactersAsync(player);
+
+            SelectedCharacter = characters.FirstOrDefault();
+        }
+    }
+
+
+
+}

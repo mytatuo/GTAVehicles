@@ -192,8 +192,15 @@ namespace GTAVehicles.Data
 
         public Task<GtaplayerGarages> CreateGarageAsync(GtaplayerGarages objGtaplayerGarage)
         {
-            _context.GtaplayerGarages.Add(objGtaplayerGarage);
-            _context.SaveChanges();
+            try
+            {
+                _context.GtaplayerGarages.Add(objGtaplayerGarage);
+                _context.SaveChanges();                
+            }
+            catch (System.Exception ex)
+            {
+                string myerror = ex.GetBaseException().ToString();
+            }
 
             return Task.FromResult(objGtaplayerGarage);
         }
