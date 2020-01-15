@@ -17,6 +17,14 @@
 <AuthorizeView>
     <!-- Show this section if the user is logged in -->
     <Authorized>
+        <RadzenDropDown AllowFiltering="false"
+                        @bind-Value="SelectedCharacterId"
+                        Placeholder="Select Character..."
+                        Data="@characters"
+                        TextProperty="CharacterName"
+                        ValueProperty="Id"
+                        Style="margin-bottom: 20px; width:250px;" />
+
         <div class="row">
             <div class="col-md-6">
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="SelectedCharacter.GtaplayerGarages" TItem="GtaplayerGarages">
@@ -46,6 +54,7 @@
     Gtaplayers player;
     List<GtaplayerCharacters> characters;
     GtaplayerCharacters SelectedCharacter;
+    string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
     GtaplayerGarages SelectedGarage;
 
