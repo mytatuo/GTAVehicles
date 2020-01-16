@@ -22,7 +22,8 @@
                         Placeholder="Select Character..."
                         Data="@characters"
                         TextProperty="CharacterName"
-                        ValueProperty="Id"
+                        ValueProperty="Id.ToString()"
+                        Change="UpdateCharacter"
                         Style="margin-bottom: 20px; width:250px;" />
 
         <div class="row">
@@ -70,10 +71,22 @@
             // Get the character(s) for that player
             characters = await @Service.GetCharactersAsync(player);
 
-            SelectedCharacter = characters.FirstOrDefault();
+            UpdateCharacter();
         }
     }
 
 
+    void UpdateCharacter()
+    {
+        if (SelectedCharacterId != "")
+        {
+            SelectedCharacter = characters.Where(x => x.Id == Convert.ToInt32(SelectedCharacterId)).FirstOrDefault();
+        }
+        else
+        {
+            SelectedCharacter = characters.FirstOrDefault();
+            SelectedCharacterId = SelectedCharacter.Id.ToString();
+        }
 
+    }
 }
