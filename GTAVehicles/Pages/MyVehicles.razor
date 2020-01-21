@@ -54,6 +54,7 @@
 
     Gtaplayers player;
     List<GtaplayerCharacters> characters;
+    List<GtacharactersDTO> characterNames = new List<GtacharactersDTO>();
     GtaplayerCharacters SelectedCharacter;
     string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
@@ -68,10 +69,21 @@
             // Get the player object for the current user
             player = await @Service.GetPlayerAsync(user.Identity.Name);
 
-            // Get the character(s) for that player
             characters = await @Service.GetCharactersAsync(player);
 
-            UpdateCharacter();
+            //// get a list of the player's characters for a dropdown selector
+            //var TempPlayerCharacters = await @Service.GetCharactersAsync(player);
+
+            //foreach (var item in TempPlayerCharacters)
+            //{
+            //    GtacharacterDropdownClass newGtacharacterDropdownClass = new GtacharacterDropdownClass();
+            //    newGtacharacterDropdownClass.Id = item.Id.ToString();
+            //    newGtacharacterDropdownClass.CharacterName = item.CharacterName;
+
+            //    characterNames.Add(newGtacharacterDropdownClass);
+            //}
+
+            //UpdateCharacter();
         }
     }
 
@@ -80,7 +92,8 @@
     {
         if (SelectedCharacterId != "")
         {
-            SelectedCharacter = characters.Where(x => x.Id == Convert.ToInt32(SelectedCharacterId)).FirstOrDefault();
+
+            //SelectedCharacter = characters.Where(x => x.Id == SelectedCharacterId).FirstOrDefault();
         }
         else
         {
