@@ -21,8 +21,8 @@
                         @bind-Value="SelectedCharacterId"
                         Placeholder="Select Character..."
                         Data="@characters"
-                        TextProperty="CharacterName"
-                        ValueProperty="Id.ToString()"
+                        TextProperty="UserName"
+                        ValueProperty="Id"
                         Change="UpdateCharacter"
                         Style="margin-bottom: 20px; width:250px;" />
 
@@ -33,11 +33,10 @@
                         <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
                     </Columns>
                 </RadzenGrid>
-
             </div>
             <div class="col-md-6">
                 <RadzenCard Style="margin-bottom:20px">
-                    Character: @SelectedCharacter.CharacterName
+                    Character: @SelectedCharacter.UserName
                 </RadzenCard>
             </div>
         </div>
@@ -53,9 +52,8 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     Gtaplayers player;
-    List<GtaplayerCharacters> characters;
-    List<GtacharactersDTO> characterNames = new List<GtacharactersDTO>();
-    GtaplayerCharacters SelectedCharacter;
+    List<GtacharactersDTO> characters;
+    GtacharactersDTO SelectedCharacter = new GtacharactersDTO();
     string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
     GtaplayerGarages SelectedGarage;
@@ -69,7 +67,7 @@
             // Get the player object for the current user
             player = await @Service.GetPlayerAsync(user.Identity.Name);
 
-            characters = await @Service.GetCharactersAsync(player);
+            characters = await @Service.GetCharactersDTOAsync(player);
 
             //// get a list of the player's characters for a dropdown selector
             //var TempPlayerCharacters = await @Service.GetCharactersAsync(player);
@@ -92,14 +90,7 @@
     {
         if (SelectedCharacterId != "")
         {
-
-            //SelectedCharacter = characters.Where(x => x.Id == SelectedCharacterId).FirstOrDefault();
+            SelectedCharacter = characters.Where(x => x.Id == SelectedCharacterId).FirstOrDefault();
         }
-        else
-        {
-            SelectedCharacter = characters.FirstOrDefault();
-            SelectedCharacterId = SelectedCharacter.Id.ToString();
-        }
-
     }
 }

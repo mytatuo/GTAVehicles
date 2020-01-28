@@ -106,6 +106,25 @@ namespace GTAVehicles.Data
             return Task.FromResult(colGTACharacters);
         }
 
+        public Task<List<GtacharactersDTO>> GetCharactersDTOAsync(Gtaplayers player)
+        {
+            List<GtacharactersDTO> colGTACharacters = new List<GtacharactersDTO>();
+            // get GTA Player's Characters
+
+            // only get character(s) for the current logged-in user
+            colGTACharacters = (from gtacharacter in _context.GtaplayerCharacters
+                                .Include(GtaplayerGarage => GtaplayerGarage.GtaplayerGarages)
+                                where gtacharacter.PlayerId == player.Id
+                                select new GtacharactersDTO
+                                {
+                                    Id = gtacharacter.Id.ToString(),
+                                    UserName = gtacharacter.CharacterName,
+                                    GtaplayerGarages = gtacharacter.GtaplayerGarages.ToList()
+                                }).AsNoTracking().ToList();
+
+            return Task.FromResult(colGTACharacters);
+        }
+
         public Task<GtaplayerCharacters> CreateCharacterAsync(GtaplayerCharacters objGtaplayerCharacter)
         {
             _context.GtaplayerCharacters.Add(objGtaplayerCharacter);
@@ -195,7 +214,7 @@ namespace GTAVehicles.Data
             try
             {
                 _context.GtaplayerGarages.Add(objGtaplayerGarage);
-                _context.SaveChanges();                
+                _context.SaveChanges();
             }
             catch (System.Exception ex)
             {

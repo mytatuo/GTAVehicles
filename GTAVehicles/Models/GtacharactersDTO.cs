@@ -9,5 +9,7 @@ namespace GTAVehicles.Models
     {
         public string Id { get; set; }
         public string UserName { get; set; }
+
+        public List<GtaplayerGarages> GtaplayerGarages { get; set; }
     }
 }
