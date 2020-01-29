@@ -28,7 +28,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="SelectedCharacter.GtaplayerGarages" TItem="GtaplayerGarages">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@SelectedCharacter.GtaplayerGarages" TItem="GtaplayerGarages" RowSelect="@(args => SelectedGarage = args)">
                     <Columns>
                         <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
                     </Columns>
@@ -38,6 +38,23 @@
                 <RadzenCard Style="margin-bottom:20px">
                     Character: @SelectedCharacter.UserName
                 </RadzenCard>
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
+                    <Columns>
+                        <RadzenGridColumn TItem="GtaplayerVehicles" Property="@Vehicle.VehicleModel" Title="Model Name" />
+                        @*<RadzenGridColumn TItem="GtaplayerGarages" Property="Gtapla" Title="Order" />
+        <RadzenGridColumn TItem="GtaplayerGarages" Property="UnitPrice" Title="Unit Price">
+            <Template Context="detail">
+                @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.UnitPrice)
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="OrderDetail" Property="Quantity" Title="Quantity" />
+        <RadzenGridColumn TItem="OrderDetail" Property="Discount" Title="Discount">
+            <Template Context="detail">
+                @String.Format("{0}%", detail.Discount * 100)
+            </Template>
+        </RadzenGridColumn>*@
+                    </Columns>
+                </RadzenGrid>
             </div>
         </div>
     </Authorized>
@@ -68,18 +85,6 @@
             player = await @Service.GetPlayerAsync(user.Identity.Name);
 
             characters = await @Service.GetCharactersDTOAsync(player);
-
-            //// get a list of the player's characters for a dropdown selector
-            //var TempPlayerCharacters = await @Service.GetCharactersAsync(player);
-
-            //foreach (var item in TempPlayerCharacters)
-            //{
-            //    GtacharacterDropdownClass newGtacharacterDropdownClass = new GtacharacterDropdownClass();
-            //    newGtacharacterDropdownClass.Id = item.Id.ToString();
-            //    newGtacharacterDropdownClass.CharacterName = item.CharacterName;
-
-            //    characterNames.Add(newGtacharacterDropdownClass);
-            //}
 
             //UpdateCharacter();
         }
