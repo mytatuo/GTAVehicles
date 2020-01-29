@@ -6,7 +6,7 @@ IF NOT EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[vw_G
 EXEC dbo.sp_executesql @statement = N'CREATE VIEW [dbo].[vw_GTAVehiclesOwned]
 AS
 SELECT        dbo.GTAPlayerVehicles.ID, dbo.GTAVehicles.VehicleModel, dbo.GTAPlayerCharacters.CharacterName, dbo.GTAPlayerCharacters.ID AS CharacterID, dbo.GTAPlayerGarages.GarageName, 
-                         dbo.GTAPlayerGarages.ID AS PlayerGarageID
+                         dbo.GTAPlayerGarages.ID AS PlayerGarageID, dbo.GTAVehicles.ID AS VehicleID
 FROM            dbo.GTAPlayerVehicles INNER JOIN
                          dbo.GTAPlayerGarages ON dbo.GTAPlayerVehicles.PlayerGarageID = dbo.GTAPlayerGarages.ID INNER JOIN
                          dbo.GTAPlayerCharacters ON dbo.GTAPlayerGarages.CharacterID = dbo.GTAPlayerCharacters.ID INNER JOIN
@@ -168,8 +168,8 @@ Begin DesignProperties =
    Begin CriteriaPane = 
       Begin ColumnWidths = 11
          Column = 1440
-         Alias = 900
-         Table = 1170
+         Alias = 2505
+         Table = 1875
          Output = 720
          Append = 1400
          NewValue = 1170
@@ -178,10 +178,10 @@ Begin DesignProperties =
          GroupBy = 1350
          Filter = 1350
          Or = 1350
-         Or = 135' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_GTAVehiclesOwned'
+         Or = 13' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vw_GTAVehiclesOwned'
 GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'MS_DiagramPane2' , N'SCHEMA',N'dbo', N'VIEW',N'vw_GTAVehiclesOwned', NULL,NULL))
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'0
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'50
          Or = 1350
       End
    End
