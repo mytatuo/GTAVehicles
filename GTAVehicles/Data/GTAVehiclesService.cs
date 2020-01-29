@@ -47,6 +47,24 @@ namespace GTAVehicles.Data
             return Task.FromResult(colGTAVehicleClasses);
         }
 
+        public Task<IQueryable<GTAVehiclesOwned>> GetGTAVehiclesOwnedAsync(int GarageId)
+        {
+            var result = _context.GTAVehiclesOwned
+                .FromSqlRaw("SELECT * FROM [Manipulyte].[dbo].[vw_GTAVehiclesOwned]").Where(x => x.PlayerGarageID == GarageId)
+                .Select(x => new GTAVehiclesOwned
+                {
+                    Id = x.Id,
+                    VehicleModel = x.VehicleModel,
+                    CharacterName = x.CharacterName,
+                    CharacterID = x.CharacterID,
+                    GarageName = x.GarageName,
+                    PlayerGarageID = x.PlayerGarageID,
+                    VehicleID = x.VehicleID
+                }).AsNoTracking().AsQueryable();
+
+            return Task.FromResult(result);
+        }
+
         public Task<IQueryable<GTAVehiclesRanked>> GetGTAVehiclesRankedAsync(List<int> classIDs)
         {
             // get all vehicles in GTA

@@ -103,8 +103,8 @@
         }
     }
 
-    void LoadVehicles(GtaplayerGarages param)
+    async Task LoadVehicles(GtaplayerGarages param)
     {
-
+        var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(param.Id));
     }
 }
