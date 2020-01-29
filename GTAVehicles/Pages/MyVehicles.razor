@@ -40,7 +40,7 @@
                 </RadzenCard>
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
                     <Columns>
-                        <RadzenGridColumn TItem="GtaplayerVehicles" Property="@Vehicle.VehicleModel" Title="Model Name" />
+                        <RadzenGridColumn TItem="Gtavehicles" Property="VehicleModel" Title="Model Name" />
                         @*<RadzenGridColumn TItem="GtaplayerGarages" Property="Gtapla" Title="Order" />
         <RadzenGridColumn TItem="GtaplayerGarages" Property="UnitPrice" Title="Unit Price">
             <Template Context="detail">
@@ -73,7 +73,7 @@
     GtacharactersDTO SelectedCharacter = new GtacharactersDTO();
     string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
-    GtaplayerGarages SelectedGarage;
+    GtaplayerGarages SelectedGarage = new GtaplayerGarages();
 
     protected override async Task OnInitializedAsync()
     {
