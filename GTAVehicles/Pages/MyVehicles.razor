@@ -28,7 +28,10 @@
 
         <div class="row">
             <div class="col-md-6">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" Data="@SelectedCharacter.GtaplayerGarages" TItem="GtaplayerGarages" RowSelect="@(args => SelectedGarage = args)">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" 
+                            Data="@SelectedCharacter.GtaplayerGarages" 
+                            TItem="GtaplayerGarages" 
+                            RowSelect="@(args => LoadVehicles(args))">
                     <Columns>
                         <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
                     </Columns>
@@ -36,9 +39,10 @@
             </div>
             <div class="col-md-6">
                 <RadzenCard Style="margin-bottom:20px">
-                    Character: @SelectedCharacter.UserName
+                    Character: @SelectedCharacter.UserName Selected Garrage: @SelectedGarage.GarageName
                 </RadzenCard>
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" 
+                            Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
                     <Columns>
                         <RadzenGridColumn TItem="Gtavehicles" Property="VehicleModel" Title="Model Name" />
                         @*<RadzenGridColumn TItem="GtaplayerGarages" Property="Gtapla" Title="Order" />
@@ -64,7 +68,7 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
-    // AuthenticationState is available as a CascadingParameter
+        // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -97,5 +101,10 @@
         {
             SelectedCharacter = characters.Where(x => x.Id == SelectedCharacterId).FirstOrDefault();
         }
+    }
+
+    void LoadVehicles(GtaplayerGarages param)
+    {
+
     }
 }
