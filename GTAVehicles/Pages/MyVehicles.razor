@@ -39,7 +39,7 @@
             </div>
             <div class="col-md-6">
                 <RadzenCard Style="margin-bottom:20px">
-                    Character: @SelectedCharacter.UserName Selected Garrage: @SelectedGarage.GarageName
+                    Character: @SelectedCharacter.UserName - Selected Garage: @SelectedGarage.GarageName
                 </RadzenCard>
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" 
                             Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
@@ -68,7 +68,7 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
-        // AuthenticationState is available as a CascadingParameter
+    // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -105,6 +105,21 @@
 
     async Task LoadVehicles(GtaplayerGarages param)
     {
-        var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(param.Id));
+        SelectedGarage = param;
+
+        var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(SelectedGarage.Id));
+
+        foreach(var item in result)
+        {
+            if (item.PlayerGarageID == SelectedGarage.Id)
+            {
+                SelectedGarage.GtaplayerVehicles.Add(new GtaplayerVehicles()
+                {
+                    PlayerGarageId = SelectedGarage.Id,
+                    VehicleId = item.VehicleID,
+                    PlayerId = player.Id
+                });
+            }
+        }
     }
 }
