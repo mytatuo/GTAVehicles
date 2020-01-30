@@ -38,25 +38,10 @@
                 </RadzenGrid>
             </div>
             <div class="col-md-6">
-                <RadzenCard Style="margin-bottom:20px">
-                    Character: @SelectedCharacter.UserName - Selected Garage: @SelectedGarage.GarageName
-                </RadzenCard>
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" 
-                            Data="@SelectedGarage.GtaplayerVehicles" TItem="GtaplayerVehicles">
+                            Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned">
                     <Columns>
-                        <RadzenGridColumn TItem="Gtavehicles" Property="VehicleModel" Title="Model Name" />
-                        @*<RadzenGridColumn TItem="GtaplayerGarages" Property="Gtapla" Title="Order" />
-        <RadzenGridColumn TItem="GtaplayerGarages" Property="UnitPrice" Title="Unit Price">
-            <Template Context="detail">
-                @String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", detail.UnitPrice)
-            </Template>
-        </RadzenGridColumn>
-        <RadzenGridColumn TItem="OrderDetail" Property="Quantity" Title="Quantity" />
-        <RadzenGridColumn TItem="OrderDetail" Property="Discount" Title="Discount">
-            <Template Context="detail">
-                @String.Format("{0}%", detail.Discount * 100)
-            </Template>
-        </RadzenGridColumn>*@
+                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />                     
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -74,6 +59,7 @@
 
     Gtaplayers player;
     List<GtacharactersDTO> characters;
+    List<GTAVehiclesOwned> colGTAVehiclesOwned = new List<GTAVehiclesOwned>();
     GtacharactersDTO SelectedCharacter = new GtacharactersDTO();
     string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
@@ -108,18 +94,6 @@
         SelectedGarage = param;
 
         var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(SelectedGarage.Id));
-
-        foreach(var item in result)
-        {
-            if (item.PlayerGarageID == SelectedGarage.Id)
-            {
-                SelectedGarage.GtaplayerVehicles.Add(new GtaplayerVehicles()
-                {
-                    PlayerGarageId = SelectedGarage.Id,
-                    VehicleId = item.VehicleID,
-                    PlayerId = player.Id
-                });
-            }
-        }
+        colGTAVehiclesOwned = result.ToList();
     }
 }
