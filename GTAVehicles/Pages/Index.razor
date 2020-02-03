@@ -71,8 +71,8 @@
             </RadzenTabsItem>
 
             <RadzenTabsItem Text="DataGrid">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px">
-                    <Columns>
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px" RowSelect="@((vehicle) => ShowVehicleDetail(vehicle))">
+                    <Columns >
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
