@@ -28,9 +28,9 @@
 
         <div class="row">
             <div class="col-md-6">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true" 
-                            Data="@SelectedCharacter.GtaplayerGarages" 
-                            TItem="GtaplayerGarages" 
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="10" AllowSorting="true"
+                            Data="@SelectedCharacter.GtaplayerGarages"
+                            TItem="GtaplayerGarages"
                             RowSelect="@(args => LoadVehicles(args))">
                     <Columns>
                         <RadzenGridColumn TItem="GtaplayerGarages" Property="GarageName" Title="Garage Name" />
@@ -38,14 +38,57 @@
                 </RadzenGrid>
             </div>
             <div class="col-md-6">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" 
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true"
                             Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned">
                     <Columns>
-                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />                     
+                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />
+                        <RadzenGridColumn TItem="GtaplayerVehicles" Property="Id" Title="Edit">
+                            <Template Context="PlayerVehicle">
+                                <RadzenButton ButtonStyle="ButtonStyle.Success"
+                                              Click="@(() => MoveOrRemoveVehicle(PlayerVehicle))" Icon="edit">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
         </div>
+
+        @if (ShowVehiclePopup)
+        {
+            <!-- This is the popup to move or remove a PlayerVehicle -->
+            <div class="modal" tabindex="-1" style="display:block" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Move/Remove Vehicle</h3>
+                            <!-- Button to close the popup -->
+                            <button type="button" class="close"
+                                    @onclick="CloseVehiclePopup">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <!-- Edit form for the current Vehicle -->
+                        <div class="modal-body">
+                            <input class="form-control" type="text"
+                                   placeholder="Garage Name"
+                                   @bind="SelectedGarage.GarageName" />
+                            <br />
+                            <!-- Button to save the garage -->
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                          Click="MoveVehicleToNewGarage" Text="Save" />
+
+                            <!-- Only show delete button if not a new record -->
+                            @if (SelectedGarage.Id > 0)
+                            {
+                                <!-- Button to delete the garage -->
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteVehicle" Text="Delete" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </Authorized>
     <!-- Show this section if the user is not logged in -->
     <NotAuthorized>
@@ -53,7 +96,7 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
-    // AuthenticationState is available as a CascadingParameter
+        // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -64,6 +107,7 @@
     string SelectedCharacterId = "";
     List<GtaplayerGarages> garages;
     GtaplayerGarages SelectedGarage = new GtaplayerGarages();
+    bool ShowVehiclePopup = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,5 +139,31 @@
 
         var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(SelectedGarage.Id));
         colGTAVehiclesOwned = result.ToList();
+    }
+
+    void MoveOrRemoveVehicle(GtaplayerVehicles veh)
+    {
+        ShowVehiclePopup = true;
+        // get new garage id
+        // update PlayerVehicle table to new garage
+        // OR //
+        // delete PlayerVehicle entry
+    }
+
+    void CloseVehiclePopup()
+    {
+        ShowVehiclePopup = false;
+    }
+
+    void MoveVehicleToNewGarage()
+    {
+        // do something
+        CloseVehiclePopup();
+    }
+
+    void DeleteVehicle()
+    {
+        // do something
+        CloseVehiclePopup();
     }
 }
