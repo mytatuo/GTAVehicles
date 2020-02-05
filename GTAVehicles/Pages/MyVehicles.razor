@@ -39,16 +39,10 @@
             </div>
             <div class="col-md-6">
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true"
-                            Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned">
+                            Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned" RowSelect="@((PlayerVehicle) => MoveOrRemoveVehicle(PlayerVehicle))">
                     <Columns>
                         <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />
-                        <RadzenGridColumn TItem="GtaplayerVehicles" Property="Id" Title="Edit">
-                            <Template Context="PlayerVehicle">
-                                <RadzenButton ButtonStyle="ButtonStyle.Success"
-                                              Click="@(() => MoveOrRemoveVehicle(PlayerVehicle))" Icon="edit">
-                                </RadzenButton>
-                            </Template>
-                        </RadzenGridColumn>
+
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -70,19 +64,25 @@
                         </div>
                         <!-- Edit form for the current Vehicle -->
                         <div class="modal-body">
-                            <input class="form-control" type="text"
-                                   placeholder="Garage Name"
-                                   @bind="SelectedGarage.GarageName" />
+                            <RadzenDropDown AllowFiltering="false"
+                                            AllowClear="true"
+                                            @bind-Value="SelectedGarage.GarageName"
+                                            Multiple="false"
+                                            Placeholder="Select New Garage..."
+                                            Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
+                                            TextProperty="GarageName"
+                                            ValueProperty="Id"
+                                            Style="margin-bottom: 20px; width:250px;" />
                             <br />
                             <!-- Button to save the garage -->
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
-                                          Click="MoveVehicleToNewGarage" Text="Save" />
+                                          Click="MoveVehicleToNewGarage" Text="Move to New Garage" />
 
                             <!-- Only show delete button if not a new record -->
                             @if (SelectedGarage.Id > 0)
                             {
                                 <!-- Button to delete the garage -->
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteVehicle" Text="Delete" />
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteVehicle" Text="Remove from Game" />
                             }
                         </div>
                     </div>
@@ -105,7 +105,7 @@
     List<GTAVehiclesOwned> colGTAVehiclesOwned = new List<GTAVehiclesOwned>();
     GtacharactersDTO SelectedCharacter = new GtacharactersDTO();
     string SelectedCharacterId = "";
-    List<GtaplayerGarages> garages;
+    List<GtaplayerGaragesDTO> garages;
     GtaplayerGarages SelectedGarage = new GtaplayerGarages();
     bool ShowVehiclePopup = false;
 
@@ -141,9 +141,11 @@
         colGTAVehiclesOwned = result.ToList();
     }
 
-    void MoveOrRemoveVehicle(GtaplayerVehicles veh)
+    async Task MoveOrRemoveVehicle(GTAVehiclesOwned veh)
     {
+        garages = await @Service.GetGaragesForPlayerAsync(player);
         ShowVehiclePopup = true;
+
         // get new garage id
         // update PlayerVehicle table to new garage
         // OR //
