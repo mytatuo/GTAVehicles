@@ -39,10 +39,15 @@
             </div>
             <div class="col-md-6">
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true"
-                            Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned" RowSelect="@((PlayerVehicle) => MoveOrRemoveVehicle(PlayerVehicle))">
+                            Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned">
                     <Columns>
+                        <RadzenGridColumn TItem="GTAVehiclesOwned" Context="PlayerVehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                            <Template Context="PlayerVehicle">
+                                <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => MoveOrRemoveVehicle(PlayerVehicle))">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />
-
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -66,7 +71,7 @@
                         <div class="modal-body">
                             <RadzenDropDown AllowFiltering="false"
                                             AllowClear="true"
-                                            @bind-Value="SelectedGarage.GarageName"
+                                            @bind-Value="TransferGarage.GarageName"
                                             Multiple="false"
                                             Placeholder="Select New Garage..."
                                             Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
@@ -107,6 +112,7 @@
     string SelectedCharacterId = "";
     List<GtaplayerGaragesDTO> garages;
     GtaplayerGarages SelectedGarage = new GtaplayerGarages();
+    GtaplayerGarages TransferGarage = new GtaplayerGarages();
     bool ShowVehiclePopup = false;
 
     protected override async Task OnInitializedAsync()
