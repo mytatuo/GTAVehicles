@@ -74,7 +74,7 @@
                                             @bind-Value="TransferGarage.Id"
                                             Multiple="false"
                                             Placeholder="Select New Garage..."
-                                            Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
+                                            Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId && o.Id != SelectedGarage.Id.ToString()))"
                                             TextProperty="GarageName"
                                             ValueProperty="Id"
                                             Style="margin-bottom: 20px; width:250px;" />
