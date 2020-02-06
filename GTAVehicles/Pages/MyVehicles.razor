@@ -71,7 +71,7 @@
                         <div class="modal-body">
                             <RadzenDropDown AllowFiltering="false"
                                             AllowClear="true"
-                                            @bind-Value="TransferGarage.GarageName"
+                                            @bind-Value="TransferGarage.Id"
                                             Multiple="false"
                                             Placeholder="Select New Garage..."
                                             Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId))"
@@ -101,7 +101,7 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
-        // AuthenticationState is available as a CascadingParameter
+    // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -165,6 +165,16 @@
 
     void MoveVehicleToNewGarage()
     {
+        if (TransferGarage != null)
+        {
+            if (TransferGarage.GarageName != null)
+            {
+                if (TransferGarage.Id != SelectedGarage.Id)
+                {
+                    // do something
+                }
+            }
+        }
         // do something
         CloseVehiclePopup();
     }
