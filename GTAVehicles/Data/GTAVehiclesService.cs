@@ -284,6 +284,27 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
+        public Task<bool> TransferVehicleAsync(int GtaplayerVehiclesID, int PlayerGarageId)
+        {
+            var GtaplayerVehicle =
+                _context.GtaplayerVehicles
+                .Where(x => x.Id == GtaplayerVehiclesID)
+                .FirstOrDefault();
+
+            if (GtaplayerVehicle != null)
+            {
+                GtaplayerVehicle.PlayerGarageId = PlayerGarageId;
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
+
         public Task<GtaplayerVehicles> StoreVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
         {
             _context.GtaplayerVehicles.Add(objGtaplayerVehicle);

@@ -71,12 +71,11 @@
                         <div class="modal-body">
                             <RadzenDropDown AllowFiltering="false"
                                             AllowClear="true"
-                                            @bind-Value="TransferGarage.Id"
+                                            @bind-Value="TransferGarage"
                                             Multiple="false"
                                             Placeholder="Select New Garage..."
                                             Data="@(garages.Where(o => o.CharacterId.ToString() == SelectedCharacterId && o.Id != SelectedGarage.Id.ToString()))"
                                             TextProperty="GarageName"
-                                            ValueProperty="Id"
                                             Style="margin-bottom: 20px; width:250px;" />
                             <br />
                             <!-- Button to save the garage -->
@@ -112,7 +111,7 @@
     string SelectedCharacterId = "";
     List<GtaplayerGaragesDTO> garages;
     GtaplayerGarages SelectedGarage = new GtaplayerGarages();
-    GtaplayerGarages TransferGarage = new GtaplayerGarages();
+    GtaplayerGaragesDTO TransferGarage = new GtaplayerGaragesDTO();
     bool ShowVehiclePopup = false;
 
     protected override async Task OnInitializedAsync()
@@ -163,18 +162,11 @@
         ShowVehiclePopup = false;
     }
 
-    void MoveVehicleToNewGarage()
+     async Task MoveVehicleToNewGarage()
     {
-        if (TransferGarage != null)
-        {
-            if (TransferGarage.GarageName != null)
-            {
-                if (TransferGarage.Id != SelectedGarage.Id)
-                {
-                    // do something
-                }
-            }
-        }
+        // Get the record to alter
+        //var result = await @Service.TransferVehicleAsync(0,0);
+
         // do something
         CloseVehiclePopup();
     }
