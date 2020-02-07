@@ -284,12 +284,12 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
-        public Task<bool> TransferVehicleAsync(int GtaplayerVehiclesID, int PlayerGarageId)
+        public Task<bool> TransferVehicleAsync(GtaplayerVehicles GtaplayerVehicle, int PlayerGarageId)
         {
-            var GtaplayerVehicle =
-                _context.GtaplayerVehicles
-                .Where(x => x.Id == GtaplayerVehiclesID)
-                .FirstOrDefault();
+            //var GtaplayerVehicle =
+            //    _context.GtaplayerVehicles
+            //    .Where(x => x.Id == GtaplayerVehiclesID)
+            //    .FirstOrDefault();
 
             if (GtaplayerVehicle != null)
             {
@@ -304,6 +304,19 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(true);
         }
+
+        public Task<GtaplayerVehicles> GetGTAPlayerVehicleAsync(int VehicleOwnedId)
+        {
+            GtaplayerVehicles GTAPlayerVehicle = new GtaplayerVehicles();
+
+            GTAPlayerVehicle = (from veh in _context.GtaplayerVehicles
+                            where veh.Id == VehicleOwnedId
+                            select veh).AsNoTracking().FirstOrDefault();
+
+            return Task.FromResult(GTAPlayerVehicle);
+        }
+
+
 
         public Task<GtaplayerVehicles> StoreVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
         {

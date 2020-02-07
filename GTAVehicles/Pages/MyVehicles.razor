@@ -112,6 +112,7 @@
     List<GtaplayerGaragesDTO> garages;
     GtaplayerGarages SelectedGarage = new GtaplayerGarages();
     GtaplayerGaragesDTO TransferGarage = new GtaplayerGaragesDTO();
+    GtaplayerVehicles SelectedVehicle = new GtaplayerVehicles();
     bool ShowVehiclePopup = false;
 
     protected override async Task OnInitializedAsync()
@@ -149,6 +150,7 @@
     async Task MoveOrRemoveVehicle(GTAVehiclesOwned veh)
     {
         garages = await @Service.GetGaragesForPlayerAsync(player);
+        SelectedVehicle = await Service.GetGTAPlayerVehicleAsync(veh.Id);
         ShowVehiclePopup = true;
 
         // get new garage id
@@ -165,7 +167,7 @@
      async Task MoveVehicleToNewGarage()
     {
         // Get the record to alter
-        //var result = await @Service.TransferVehicleAsync(0,0);
+        var result = await @Service.TransferVehicleAsync(SelectedVehicle,Convert.ToInt32(TransferGarage.Id));
 
         // do something
         CloseVehiclePopup();
