@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using System;
 
 namespace GTAVehicles.Data
 {
@@ -284,16 +285,17 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
-        public Task<bool> TransferVehicleAsync(GtaplayerVehicles GtaplayerVehicle, int PlayerGarageId)
+        public Task<bool> TransferVehicleAsync(GtaplayerVehicles SelectedVehicle, GtaplayerGaragesDTO TransferGarage)
         {
-            //var GtaplayerVehicle =
-            //    _context.GtaplayerVehicles
-            //    .Where(x => x.Id == GtaplayerVehiclesID)
-            //    .FirstOrDefault();
+            // get a reference to the actual database record
+            var GtaplayerVehicle =
+                _context.GtaplayerVehicles
+               .Where(x => x.Id == SelectedVehicle.Id)
+               .FirstOrDefault();
 
             if (GtaplayerVehicle != null)
             {
-                GtaplayerVehicle.PlayerGarageId = PlayerGarageId;
+                GtaplayerVehicle.PlayerGarageId = Convert.ToInt32(TransferGarage.Id);
 
                 _context.SaveChanges();
             }
@@ -305,18 +307,16 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
-        public Task<GtaplayerVehicles> GetGTAPlayerVehicleAsync(int VehicleOwnedId)
+        public Task<GtaplayerVehicles> GetGTAPlayerVehicleAsync(GTAVehiclesOwned VehicleOwned)
         {
             GtaplayerVehicles GTAPlayerVehicle = new GtaplayerVehicles();
 
             GTAPlayerVehicle = (from veh in _context.GtaplayerVehicles
-                            where veh.Id == VehicleOwnedId
-                            select veh).AsNoTracking().FirstOrDefault();
+                                where veh.Id == VehicleOwned.Id
+                                select veh).AsNoTracking().FirstOrDefault();
 
             return Task.FromResult(GTAPlayerVehicle);
         }
-
-
 
         public Task<GtaplayerVehicles> StoreVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
         {

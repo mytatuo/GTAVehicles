@@ -147,10 +147,10 @@
         colGTAVehiclesOwned = result.ToList();
     }
 
-    async Task MoveOrRemoveVehicle(GTAVehiclesOwned veh)
+    async Task MoveOrRemoveVehicle(GTAVehiclesOwned vehicle)
     {
         garages = await @Service.GetGaragesForPlayerAsync(player);
-        SelectedVehicle = await Service.GetGTAPlayerVehicleAsync(veh.Id);
+        SelectedVehicle = await Service.GetGTAPlayerVehicleAsync(vehicle);
         ShowVehiclePopup = true;
 
         // get new garage id
@@ -167,7 +167,7 @@
      async Task MoveVehicleToNewGarage()
     {
         // Get the record to alter
-        var result = await @Service.TransferVehicleAsync(SelectedVehicle,Convert.ToInt32(TransferGarage.Id));
+        var result = await @Service.TransferVehicleAsync(SelectedVehicle,TransferGarage);
 
         // do something
         CloseVehiclePopup();
