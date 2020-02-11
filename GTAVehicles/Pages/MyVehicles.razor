@@ -38,7 +38,7 @@
                 </RadzenGrid>
             </div>
             <div class="col-md-6">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true"
+                <RadzenGrid @ref="DataGridRef" AllowFiltering="true" AllowPaging="true" AllowSorting="true"
                             Data="@colGTAVehiclesOwned" TItem="GTAVehiclesOwned">
                     <Columns>
                         <RadzenGridColumn TItem="GTAVehiclesOwned" Context="PlayerVehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
@@ -104,6 +104,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
+    RadzenGrid<GTAVehiclesOwned> DataGridRef;
     Gtaplayers player;
     List<GtacharactersDTO> characters;
     List<GTAVehiclesOwned> colGTAVehiclesOwned = new List<GTAVehiclesOwned>();
@@ -145,6 +146,11 @@
 
         var result = await @Service.GetGTAVehiclesOwnedAsync(Convert.ToInt32(SelectedGarage.Id));
         colGTAVehiclesOwned = result.ToList();
+
+        if (DataGridRef != null)
+        {
+            DataGridRef.FirstPage();
+        }
     }
 
     async Task MoveOrRemoveVehicle(GTAVehiclesOwned vehicle)
@@ -162,7 +168,7 @@
     async Task MoveVehicleToNewGarage()
     {
         // Get the record to alter
-        var result = await @Service.TransferVehicleAsync(SelectedVehicle,TransferGarage);
+        var result = await @Service.TransferVehicleAsync(SelectedVehicle, TransferGarage);
         await LoadVehicles(SelectedGarage);
         CloseVehiclePopup();
     }
