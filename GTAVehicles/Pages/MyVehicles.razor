@@ -127,10 +127,13 @@
 
             characters = await @Service.GetCharactersDTOAsync(player);
 
-            //UpdateCharacter();
+            if(characters.FirstOrDefault() != null)
+            { 
+                SelectedCharacterId = characters.FirstOrDefault().Id.ToString();
+                UpdateCharacter();
+            }
         }
     }
-
 
     void UpdateCharacter()
     {
