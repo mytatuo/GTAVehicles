@@ -163,13 +163,14 @@
     {
         // Get the record to alter
         var result = await @Service.TransferVehicleAsync(SelectedVehicle,TransferGarage);
-
+        await LoadVehicles(SelectedGarage);
         CloseVehiclePopup();
     }
 
     async Task DeleteVehicle()
     {
         var result = await @Service.RemoveVehicleAsync(SelectedVehicle);
+        await LoadVehicles(SelectedGarage);
         CloseVehiclePopup();
     }
 }
