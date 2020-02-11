@@ -152,11 +152,6 @@
         garages = await @Service.GetGaragesForPlayerAsync(player);
         SelectedVehicle = await Service.GetGTAPlayerVehicleAsync(vehicle);
         ShowVehiclePopup = true;
-
-        // get new garage id
-        // update PlayerVehicle table to new garage
-        // OR //
-        // delete PlayerVehicle entry
     }
 
     void CloseVehiclePopup()
@@ -164,18 +159,17 @@
         ShowVehiclePopup = false;
     }
 
-     async Task MoveVehicleToNewGarage()
+    async Task MoveVehicleToNewGarage()
     {
         // Get the record to alter
         var result = await @Service.TransferVehicleAsync(SelectedVehicle,TransferGarage);
 
-        // do something
         CloseVehiclePopup();
     }
 
-    void DeleteVehicle()
+    async Task DeleteVehicle()
     {
-        // do something
+        var result = await @Service.RemoveVehicleAsync(SelectedVehicle);
         CloseVehiclePopup();
     }
 }

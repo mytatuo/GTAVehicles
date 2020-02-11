@@ -325,5 +325,27 @@ namespace GTAVehicles.Data
 
             return Task.FromResult(objGtaplayerVehicle);
         }
+
+        public Task<bool> RemoveVehicleAsync(GtaplayerVehicles objGtaplayerVehicle)
+        {
+            // get a reference to the actual database record
+            var GtaplayerVehicle =
+                _context.GtaplayerVehicles
+               .Where(x => x.Id == objGtaplayerVehicle.Id)
+               .FirstOrDefault();
+
+            if (GtaplayerVehicle != null)
+            {
+                _context.GtaplayerVehicles.Remove(GtaplayerVehicle);
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
+
     }
 }
