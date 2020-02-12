@@ -26,7 +26,7 @@
 
 @strerror
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <RadzenDropDown AllowFiltering="false"
                         AllowClear="true"
                         @bind-Value="SelectedVehicleClasses"
@@ -37,6 +37,9 @@
                         ValueProperty="Id"
                         Change="PerformSearch"
                         Style="margin-bottom: 20px; width:250px;" />
+    </div>
+    <div class="col-md-4 align-items-end">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Text="New Vehicle in Game" />
     </div>
 </div>
 
@@ -72,7 +75,13 @@
 
             <RadzenTabsItem Text="DataGrid">
                 <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px" RowSelect="@((vehicle) => ShowVehicleDetail(vehicle))">
-                    <Columns >
+                    <Columns>
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Context="vehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                            <Template Context="vehicle">
+                                <RadzenButton Icon="edit" Size="ButtonSize.Small">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
