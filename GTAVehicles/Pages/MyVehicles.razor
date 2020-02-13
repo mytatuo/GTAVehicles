@@ -48,8 +48,16 @@
                             </Template>
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />
-                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="GarageName" Title="Class" />
-                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleID" Title="Rank" />
+                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleID" Title="Class">
+                            <Template Context="vehicle">
+                                @GetClass(vehicle);
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleID" Title="Rank">
+                            <Template Context="vehicle">
+                                @GetRank(vehicle);
+                            </Template>
+                        </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -72,7 +80,7 @@
                         <!-- Edit form for the current Vehicle -->
                         <div class="modal-body">
                             <RadzenDropDown AllowFiltering="false"
-                                            AllowClear="true"
+                                            AllowClear="false"
                                             @bind-Value="TransferGarage"
                                             Multiple="false"
                                             Placeholder="Select New Garage..."
@@ -80,16 +88,19 @@
                                             TextProperty="GarageName"
                                             Style="margin-bottom: 20px; width:250px;" />
                             <br />
-                            <!-- Button to save the garage -->
+                            <!-- Button to move the vehicle to a different garage -->
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary"
                                           Click="MoveVehicleToNewGarage" Text="Move to New Garage" />
 
-                            <!-- Only show delete button if not a new record -->
+                            <!-- IS THIS CHECK STILL NECESSARY? COPIED FROM ELSEWHERE -->
                             @if (SelectedGarage.Id > 0)
                             {
-                                <!-- Button to delete the garage -->
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteVehicle" Text="Remove from Game" />
+                                <!-- Button to delete the vehicle from garage (sold in-game) -->
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="DeleteVehicle" Text="Remove (Sold)" />
                             }
+
+                            <br />
+                            WHAT HAPPENS IF A GARAGE IS NOT SELECTED?
                         </div>
                     </div>
                 </div>
@@ -130,7 +141,7 @@
             characters = await @Service.GetCharactersDTOAsync(player);
 
             if(characters.FirstOrDefault() != null)
-            { 
+            {
                 SelectedCharacterId = characters.FirstOrDefault().Id.ToString();
                 UpdateCharacter();
             }
@@ -158,16 +169,23 @@
         }
     }
 
+    async Task<string> GetClass(GTAVehiclesOwned veh)
+    {
+        SelectedVehicle = await @Service.GetGTAPlayerVehicleAsync(veh);
+        return SelectedVehicle.Vehicle.Class.ClassName;
+    }
+
+    async Task<string> GetRank(GTAVehiclesOwned veh)
+    {
+        SelectedVehicle = await @Service.GetGTAPlayerVehicleAsync(veh);
+        return SelectedVehicle.Vehicle.TrackSpeed;
+    }
+
     async Task MoveOrRemoveVehicle(GTAVehiclesOwned vehicle)
     {
         garages = await @Service.GetGaragesForPlayerAsync(player);
         SelectedVehicle = await Service.GetGTAPlayerVehicleAsync(vehicle);
         ShowVehiclePopup = true;
-    }
-
-    void CloseVehiclePopup()
-    {
-        ShowVehiclePopup = false;
     }
 
     async Task MoveVehicleToNewGarage()
@@ -183,5 +201,10 @@
         var result = await @Service.RemoveVehicleAsync(SelectedVehicle);
         await LoadVehicles(SelectedGarage);
         CloseVehiclePopup();
+    }
+
+    void CloseVehiclePopup()
+    {
+        ShowVehiclePopup = false;
     }
 }
