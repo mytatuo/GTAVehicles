@@ -48,16 +48,6 @@
                             </Template>
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleModel" Title="Model Name" />
-                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleID" Title="Class">
-                            <Template Context="vehicle">
-                                @GetClass(vehicle);
-                            </Template>
-                        </RadzenGridColumn>
-                        <RadzenGridColumn TItem="GTAVehiclesOwned" Property="VehicleID" Title="Rank">
-                            <Template Context="vehicle">
-                                @GetRank(vehicle);
-                            </Template>
-                        </RadzenGridColumn>
                     </Columns>
                 </RadzenGrid>
             </div>
@@ -100,7 +90,6 @@
                             }
 
                             <br />
-                            WHAT HAPPENS IF A GARAGE IS NOT SELECTED?
                         </div>
                     </div>
                 </div>
@@ -148,11 +137,17 @@
         }
     }
 
-    void UpdateCharacter()
+    async Task UpdateCharacter()
     {
         if (SelectedCharacterId != "")
         {
             SelectedCharacter = characters.Where(x => x.Id == SelectedCharacterId).FirstOrDefault();
+            // See if the Character has a garage
+            var CharacterGarage = characters.Where(x => x.UserName == SelectedCharacter.UserName).FirstOrDefault().GtaplayerGarages.FirstOrDefault();
+            if(CharacterGarage != null)
+            {
+                await LoadVehicles(CharacterGarage);
+            }
         }
     }
 
@@ -167,18 +162,6 @@
         {
             DataGridRef.FirstPage();
         }
-    }
-
-    async Task<string> GetClass(GTAVehiclesOwned veh)
-    {
-        SelectedVehicle = await @Service.GetGTAPlayerVehicleAsync(veh);
-        return SelectedVehicle.Vehicle.Class.ClassName;
-    }
-
-    async Task<string> GetRank(GTAVehiclesOwned veh)
-    {
-        SelectedVehicle = await @Service.GetGTAPlayerVehicleAsync(veh);
-        return SelectedVehicle.Vehicle.TrackSpeed;
     }
 
     async Task MoveOrRemoveVehicle(GTAVehiclesOwned vehicle)
