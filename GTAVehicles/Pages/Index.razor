@@ -39,7 +39,7 @@
                         Style="margin-bottom: 20px; width:250px;" />
     </div>
     <div class="col-md-4 align-items-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Text="New Vehicle in Game" />
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Click="@(() => VehicleAdministration(true))" Text="New Vehicle in Game" />
     </div>
 </div>
 
@@ -78,7 +78,7 @@
                     <Columns>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Context="vehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
                             <Template Context="vehicle">
-                                <RadzenButton Icon="edit" Size="ButtonSize.Small">
+                                <RadzenButton Icon="edit" Click="@(() => VehicleAdministration(false))" Size="ButtonSize.Small">
                                 </RadzenButton>
                             </Template>
                         </RadzenGridColumn>
@@ -162,6 +162,41 @@
     </div>
 }
 
+@if (ShowAdminPopup)
+{
+    <div class="modal" tabindex="-1" style="display:block" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Vehicle Administration</h3>
+                    <!-- Button to close the popup -->
+                    <button type="button" class="close"
+                            @onclick="CloseAdminPopup">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <RadzenTextBox Placeholder="Vehicle Model" @bind-Value="@SelectedVehicle.VehicleModel" Style="margin-bottom: 20px" />
+                            <RadzenTextBox Placeholder="CLASS DROPDOWN" @bind-Value="@SelectedVehicle.ClassName" Style="margin-bottom: 20px" />
+                            <RadzenTextBox Placeholder="Track Time" @bind-Value="@SelectedVehicle.TrackSpeed" Style="margin-bottom: 20px" />
+                            @*<RadzenTextBox Placeholder="Top Speed" @bind-Value="@SelectedVehicle.DragSpeed.ToString()" Style="margin-bottom: 20px" />*@
+
+                            @*Replace with RadzenButton*@
+
+                            <button type="button" class="close"
+                                    @onclick="CloseAdminPopup">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
@@ -174,6 +209,7 @@
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
     GTAVehiclesRanked SelectedVehicle;
     bool ShowVehiclePopup;
+    bool ShowAdminPopup;
 
     Gtaplayers player;
     List<GtacharactersDTO> characters = new List<GtacharactersDTO>();
@@ -184,6 +220,7 @@
     protected override async Task OnInitializedAsync()
     {
         ShowVehiclePopup = false;
+        ShowAdminPopup = false;
 
         // Get the current user
         var user = (await authenticationStateTask).User;
@@ -288,5 +325,24 @@
     {
         // Close the Popup
         ShowVehiclePopup = false;
+    }
+
+    void VehicleAdministration(bool isNewAddition)
+    {
+        ShowAdminPopup = true;
+        if (isNewAddition)
+        {
+            SelectedVehicle = new GTAVehiclesRanked() { Id = 0 };
+        }
+        else
+        {
+            // set selectedvehicle to row clicked in datagrid?
+        }
+    }
+
+    void CloseAdminPopup()
+    {
+        // Close the Popup
+        ShowAdminPopup = false;
     }
 }
