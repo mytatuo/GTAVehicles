@@ -25,6 +25,7 @@
 </AuthorizeView>
 
 @strerror
+
 <div class="row">
     <div class="col-md-8">
         <RadzenDropDown AllowFiltering="false"
@@ -38,9 +39,14 @@
                         Change="PerformSearch"
                         Style="margin-bottom: 20px; width:250px;" />
     </div>
-    <div class="col-md-4 align-items-end">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Click="@(() => VehicleAdministration(true))" Text="New Vehicle in Game" />
-    </div>
+    <AuthorizeView>
+        @if (@context.User.IsInRole(ADMINISTRATION_ROLE))
+        {
+            <div class="col-md-4 align-items-end">
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Click="@(() => VehicleAdministration(new GTAVehiclesRanked() { Id = 0 }))" Text="New Vehicle in Game" />
+            </div>
+        }
+    </AuthorizeView>
 </div>
 
 @if (vehicles != null)
@@ -74,11 +80,13 @@
             </RadzenTabsItem>
 
             <RadzenTabsItem Text="DataGrid">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px" RowSelect="@((vehicle) => ShowVehicleDetail(vehicle))">
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px" 
+                            RowSelect="@((vehicle) => ShowVehicleDetail(vehicle))">
                     <Columns>
-                        <RadzenGridColumn TItem="GTAVehiclesRanked" Context="vehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Context="vehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"
+                                          Width="70px" Visible="isAdministrator">
                             <Template Context="vehicle">
-                                <RadzenButton Icon="edit" Click="@(() => VehicleAdministration(false))" Size="ButtonSize.Small">
+                                <RadzenButton Icon="edit" Click="@(() => VehicleAdministration(vehicle))" Size="ButtonSize.Small">
                                 </RadzenButton>
                             </Template>
                         </RadzenGridColumn>
@@ -198,9 +206,11 @@
 }
 
 @code {
-    // AuthenticationState is available as a CascadingParameter
+        // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
+    string ADMINISTRATION_ROLE = "Administrators";
+    bool isAdministrator = false;
 
     string strerror = "";
     RadzenDataList<GTAVehiclesRanked> DataListRef;
@@ -270,6 +280,11 @@
         {
             strerror = ex.GetBaseException().Message;
         }
+
+        if (user != null)
+        {
+            isAdministrator = user.IsInRole(ADMINISTRATION_ROLE);
+        }
     }
 
     async Task PerformSearch()
@@ -327,16 +342,16 @@
         ShowVehiclePopup = false;
     }
 
-    void VehicleAdministration(bool isNewAddition)
+    void VehicleAdministration(GTAVehiclesRanked objGTAVehiclesRanked)
     {
         ShowAdminPopup = true;
-        if (isNewAddition)
+        if (objGTAVehiclesRanked.Id == 0) // New Vehicle
         {
             SelectedVehicle = new GTAVehiclesRanked() { Id = 0 };
         }
         else
         {
-            // set selectedvehicle to row clicked in datagrid?
+            SelectedVehicle = objGTAVehiclesRanked;
         }
     }
 
