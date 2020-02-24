@@ -187,16 +187,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <RadzenTextBox Placeholder="Vehicle Model" @bind-Value="@SelectedVehicle.VehicleModel" Style="margin-bottom: 20px" />
-                            <RadzenTextBox Placeholder="CLASS DROPDOWN" @bind-Value="@SelectedVehicle.ClassName" Style="margin-bottom: 20px" />
+                            <RadzenDropDown AllowFiltering="false"
+                                            AllowClear="false"
+                                            @bind-Value="@SelectedVehicle.ClassId"
+                                            Multiple="false"
+                                            Placeholder="Vehicle Class"
+                                            Data="@vehicleClasses"
+                                            TextProperty="ClassName"
+                                            ValueProperty="Id"
+                                            Style="margin-bottom: 20px; width:250px;" />
                             <RadzenTextBox Placeholder="Track Time" @bind-Value="@SelectedVehicle.TrackSpeed" Style="margin-bottom: 20px" />
                             @*<RadzenTextBox Placeholder="Top Speed" @bind-Value="@SelectedVehicle.DragSpeed.ToString()" Style="margin-bottom: 20px" />*@
 
-                            @*Replace with RadzenButton*@
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="CloseAdminPopup" Text="TEMP Close Popup" />
 
-                            <button type="button" class="close"
-                                    @onclick="CloseAdminPopup">
-                                <span aria-hidden="true">X</span>
-                            </button>
                         </div>
                     </div>
                 </div>
