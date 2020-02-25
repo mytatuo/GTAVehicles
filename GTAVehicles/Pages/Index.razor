@@ -189,7 +189,7 @@
                             <RadzenTextBox Placeholder="Vehicle Model" @bind-Value="@SelectedVehicle.VehicleModel" Style="margin-bottom: 20px" />
                             <RadzenDropDown AllowFiltering="false"
                                             AllowClear="false"
-                                            @bind-Value="@SelectedVehicle.ClassId"
+                                            @bind-Value="@SelectedVehicleClassId"
                                             Multiple="false"
                                             Placeholder="Vehicle Class"
                                             Data="@vehicleClasses"
@@ -222,6 +222,7 @@
     IQueryable<GTAVehiclesRanked> vehicles;
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
     GTAVehiclesRanked SelectedVehicle;
+    string SelectedVehicleClassId = "";
     bool ShowVehiclePopup;
     bool ShowAdminPopup;
 
@@ -351,11 +352,13 @@
         ShowAdminPopup = true;
         if (objGTAVehiclesRanked.Id == 0) // New Vehicle
         {
+            SelectedVehicleClassId = "";
             SelectedVehicle = new GTAVehiclesRanked() { Id = 0 };
         }
         else
         {
             SelectedVehicle = objGTAVehiclesRanked;
+            SelectedVehicleClassId = SelectedVehicle.ClassId.ToString();
         }
     }
 
