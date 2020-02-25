@@ -197,9 +197,9 @@
                                             ValueProperty="Id"
                                             Style="margin-bottom: 20px; width:250px;" />
                             <RadzenTextBox Placeholder="Track Time" @bind-Value="@SelectedVehicle.TrackSpeed" Style="margin-bottom: 20px" />
-                            @*<RadzenTextBox Placeholder="Top Speed" @bind-Value="@SelectedVehicle.DragSpeed.ToString()" Style="margin-bottom: 20px" />*@
+                            <RadzenTextBox Placeholder="Top Speed" @bind-Value="@SelectedVehicleDragSpeed" Style="margin-bottom: 20px" />
 
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="CloseAdminPopup" Text="TEMP Close Popup" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="AddEditNewVehicle" Text="TEMP Close Popup" />
 
                         </div>
                     </div>
@@ -210,7 +210,7 @@
 }
 
 @code {
-        // AuthenticationState is available as a CascadingParameter
+    // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     string ADMINISTRATION_ROLE = "Administrators";
@@ -223,6 +223,7 @@
     IEnumerable<string> SelectedVehicleClasses = new string[] { };
     GTAVehiclesRanked SelectedVehicle;
     string SelectedVehicleClassId = "";
+    string SelectedVehicleDragSpeed = "";
     bool ShowVehiclePopup;
     bool ShowAdminPopup;
 
@@ -353,13 +354,29 @@
         if (objGTAVehiclesRanked.Id == 0) // New Vehicle
         {
             SelectedVehicleClassId = "";
+            SelectedVehicleDragSpeed = "0.00";
             SelectedVehicle = new GTAVehiclesRanked() { Id = 0 };
         }
         else
         {
             SelectedVehicle = objGTAVehiclesRanked;
             SelectedVehicleClassId = SelectedVehicle.ClassId.ToString();
+            SelectedVehicleDragSpeed = SelectedVehicle.DragSpeed.ToString();
         }
+    }
+
+    async Task AddEditNewVehicle()
+    {
+        if (SelectedVehicle.Id == 0)  // new vehicle add
+        {
+            var result = await @Service.AddNewVehicleToGame(SelectedVehicle);
+        }
+        else  // existing vehicle edit
+        {
+
+        }
+
+        CloseAdminPopup();
     }
 
     void CloseAdminPopup()

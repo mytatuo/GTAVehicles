@@ -347,5 +347,21 @@ namespace GTAVehicles.Data
             return Task.FromResult(true);
         }
 
+        public Task<bool> AddNewVehicleToGame(GTAVehiclesRanked newVehicle)
+        {
+            Gtavehicles objGTAVehicle = new Gtavehicles()
+            {
+                VehicleModel = newVehicle.VehicleModel,
+                ClassId = newVehicle.ClassId,
+                TrackSpeed = newVehicle.TrackSpeed,
+                DragSpeed = newVehicle.DragSpeed
+            };
+            //_context.Gtavehicles.Add(objGTAVehicle);
+            //_context.SaveChanges();
+
+
+            return Task.FromResult(true);
+        }
+
     }
 }
