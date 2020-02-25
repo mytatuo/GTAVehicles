@@ -132,7 +132,7 @@
             if(characters.FirstOrDefault() != null)
             {
                 SelectedCharacterId = characters.FirstOrDefault().Id.ToString();
-                UpdateCharacter();
+                await UpdateCharacter();
             }
         }
     }

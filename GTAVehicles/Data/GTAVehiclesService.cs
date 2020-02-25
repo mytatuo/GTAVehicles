@@ -356,9 +356,33 @@ namespace GTAVehicles.Data
                 TrackSpeed = newVehicle.TrackSpeed,
                 DragSpeed = newVehicle.DragSpeed
             };
-            //_context.Gtavehicles.Add(objGTAVehicle);
-            //_context.SaveChanges();
 
+            _context.Gtavehicles.Add(objGTAVehicle);
+            _context.SaveChanges();
+
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> EditVehicleInGame(GTAVehiclesRanked ExistingVehicle)
+        {
+            var GtaVehicle =
+                _context.Gtavehicles
+                .Where(x => x.Id == ExistingVehicle.Id)
+                .FirstOrDefault();
+
+            if (GtaVehicle != null)
+            {
+                GtaVehicle.ClassId = ExistingVehicle.ClassId;
+                GtaVehicle.DragSpeed = ExistingVehicle.DragSpeed;
+                GtaVehicle.TrackSpeed = ExistingVehicle.TrackSpeed;
+                GtaVehicle.VehicleModel = ExistingVehicle.VehicleModel;
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
 
             return Task.FromResult(true);
         }

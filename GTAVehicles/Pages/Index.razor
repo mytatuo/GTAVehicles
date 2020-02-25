@@ -80,7 +80,7 @@
             </RadzenTabsItem>
 
             <RadzenTabsItem Text="DataGrid">
-                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px" 
+                <RadzenGrid AllowFiltering="true" AllowPaging="true" PageSize="12" AllowSorting="true" Data="vehicles" TItem="GTAVehiclesRanked" ColumnWidth="200px"
                             RowSelect="@((vehicle) => ShowVehicleDetail(vehicle))">
                     <Columns>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Context="vehicle" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center"
@@ -186,6 +186,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
+                            <span style="color:red">@strEditVehicleError</span>
                             <RadzenTextBox Placeholder="Vehicle Model" @bind-Value="@SelectedVehicle.VehicleModel" Style="margin-bottom: 20px" />
                             <RadzenDropDown AllowFiltering="false"
                                             AllowClear="false"
@@ -199,7 +200,7 @@
                             <RadzenTextBox Placeholder="Track Time" @bind-Value="@SelectedVehicle.TrackSpeed" Style="margin-bottom: 20px" />
                             <RadzenTextBox Placeholder="Top Speed" @bind-Value="@SelectedVehicleDragSpeed" Style="margin-bottom: 20px" />
 
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="AddEditNewVehicle" Text="TEMP Close Popup" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="AddEditNewVehicle" Text="Save" />
 
                         </div>
                     </div>
@@ -217,6 +218,7 @@
     bool isAdministrator = false;
 
     string strerror = "";
+    string strEditVehicleError = "";
     RadzenDataList<GTAVehiclesRanked> DataListRef;
     List<GtavehicleDropdownClass> vehicleClasses = new List<GtavehicleDropdownClass>();
     IQueryable<GTAVehiclesRanked> vehicles;
@@ -350,6 +352,7 @@
 
     void VehicleAdministration(GTAVehiclesRanked objGTAVehiclesRanked)
     {
+        strEditVehicleError = "";
         ShowAdminPopup = true;
         if (objGTAVehiclesRanked.Id == 0) // New Vehicle
         {
@@ -367,16 +370,26 @@
 
     async Task AddEditNewVehicle()
     {
-        if (SelectedVehicle.Id == 0)  // new vehicle add
+        try
         {
-            var result = await @Service.AddNewVehicleToGame(SelectedVehicle);
+            SelectedVehicle.ClassId = Convert.ToInt32(SelectedVehicleClassId);
+            SelectedVehicle.DragSpeed = Convert.ToDecimal(SelectedVehicleDragSpeed);
+
+            if (SelectedVehicle.Id == 0)  // new vehicle add
+            {
+                var result = await @Service.AddNewVehicleToGame(SelectedVehicle);
+            }
+            else  // existing vehicle edit
+            {
+                var result = await @Service.EditVehicleInGame(SelectedVehicle);
+            }
+
+            CloseAdminPopup();
         }
-        else  // existing vehicle edit
+        catch (Exception ex)
         {
-
+            strEditVehicleError = ex.Message;
         }
-
-        CloseAdminPopup();
     }
 
     void CloseAdminPopup()
