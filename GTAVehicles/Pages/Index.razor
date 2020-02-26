@@ -90,6 +90,12 @@
                                 </RadzenButton>
                             </Template>
                         </RadzenGridColumn>
+                        <RadzenGridColumn TItem="GTAVehiclesRanked" Property="Id" Title="Owned" Visible="isLoggedIn" Width="70px">
+                            <Template>
+                                <RadzenIcon Style="color: pink" Icon="account_circle" />
+                                <RadzenIcon Style="color: orange" Icon="account_circle" />
+                            </Template>
+                        </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="ClassName" Title="Class" />
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="TrackSpeed" Title="Fastest Track Time (mm:ss.sss)">
@@ -216,6 +222,7 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     string ADMINISTRATION_ROLE = "Administrators";
     bool isAdministrator = false;
+    bool isLoggedIn = false;
 
     string strerror = "";
     string strEditVehicleError = "";
@@ -245,6 +252,9 @@
 
         if (user.Identity.Name != null)
         {
+            isLoggedIn = true;
+            isAdministrator = user.IsInRole(ADMINISTRATION_ROLE);
+
             // Is user in the players table
             player = await @Service.GetPlayerAsync(user.Identity.Name);
 
@@ -289,10 +299,10 @@
             strerror = ex.GetBaseException().Message;
         }
 
-        if (user != null)
-        {
-            isAdministrator = user.IsInRole(ADMINISTRATION_ROLE);
-        }
+        //if (user != null)       MOVED TO TOP!
+        //{
+        //    isAdministrator = user.IsInRole(ADMINISTRATION_ROLE);
+        //}
     }
 
     async Task PerformSearch()
