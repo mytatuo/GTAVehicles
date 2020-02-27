@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-1">&nbsp;</div>
-                                        <div class="col-md-10 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="@(() => ShowVehicleDetail(vehicle))" /></div>
+                                        <div class="col-md-10 align-items-center"><RadzenImage Path="@string.Concat("images/", vehicle.VehicleModel.Replace(' ', '-').Replace('’', '-').Replace("/", "-").Replace("(", "").Replace(")", "").ToLower(), ".jpg")" Style="width:300px;" Click="@(() => ShowVehicleDetail(vehicle))" /></div>
                                         <div class="col-md-1">&nbsp;</div>
                                     </div>
                                     <div class="row">
@@ -177,7 +177,7 @@
 }
 
 @if (ShowAdminPopup)
-{
+{<!-- This is the popup for Admins to add new vehicles to app, and edit existing vehicles -->
     <div class="modal" tabindex="-1" style="display:block" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
