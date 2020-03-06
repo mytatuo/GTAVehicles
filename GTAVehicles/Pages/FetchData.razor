@@ -254,9 +254,9 @@
         ShowCharPopup = false;
         // Get the current user
         var user = (await authenticationStateTask).User;
-        // Delete the forecast
+        // Delete the character
         var result = @Service.DeleteCharacterAsync(SelectedCharacter);
-        // Get the forecasts for the current user
+        // Get remaining characters for the current user
         characters = await @Service.GetCharactersAsync(player);
     }
 
