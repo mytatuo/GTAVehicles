@@ -305,7 +305,7 @@
     {
         CloseGaragePopup();
         var result = @Service.DeleteGarageAsync(SelectedGarage);
-        // Get the forecasts for the current user
+        // Get the garages for the current user
         garages = await @Service.GetGaragesAsync(SelectedCharacter);
     }
 
