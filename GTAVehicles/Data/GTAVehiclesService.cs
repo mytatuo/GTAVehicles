@@ -85,7 +85,8 @@ namespace GTAVehicles.Data
                                   TrackRank = x.TrackRank,
                                   TrackRankInClass = x.TrackRankInClass,
                                   TrackSpeed = x.TrackSpeed,
-                                  VehicleModel = x.VehicleModel
+                                  VehicleModel = x.VehicleModel,
+                                  CharactersOwningVehicle = x.CharactersOwningVehicle
                               }).ToList().AsQueryable();
 
                 return Task.FromResult(result);
@@ -105,7 +106,8 @@ namespace GTAVehicles.Data
                         TrackRank = x.TrackRank,
                         TrackRankInClass = x.TrackRankInClass,
                         TrackSpeed = x.TrackSpeed,
-                        VehicleModel = x.VehicleModel
+                        VehicleModel = x.VehicleModel,
+                        CharactersOwningVehicle = x.CharactersOwningVehicle
                     }).ToList().Where(x => classIDs.Contains(x.ClassId)).AsQueryable();
 
                 return Task.FromResult(result);

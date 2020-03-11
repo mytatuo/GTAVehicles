@@ -23,7 +23,7 @@ namespace GTAVehicles.Models
         public decimal DragSpeed { get; set; }
         public int DragRank { get; set; }
         public int DragRankInClass { get; set; }
-        public string colCharacters { get; set; }
+        public string CharactersOwningVehicle { get; set; }
     }
 
     public partial class GTAVehiclesOwned
