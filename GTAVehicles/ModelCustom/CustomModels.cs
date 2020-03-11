@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -22,6 +23,7 @@ namespace GTAVehicles.Models
         public decimal DragSpeed { get; set; }
         public int DragRank { get; set; }
         public int DragRankInClass { get; set; }
+        public string colCharacters { get; set; }
     }
 
     public partial class GTAVehiclesOwned

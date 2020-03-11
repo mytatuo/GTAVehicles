@@ -91,9 +91,10 @@
                             </Template>
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="Id" Title="Owned" Visible="isLoggedIn" Width="70px">
-                            <Template>
+                            <Template Context="data">
                                 <RadzenIcon Style="color: pink" Icon="account_circle" />
                                 <RadzenIcon Style="color: orange" Icon="account_circle" />
+                                <p>colCharacters: @data.colCharacters</p>
                             </Template>
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
@@ -223,6 +224,7 @@
     string ADMINISTRATION_ROLE = "Administrators";
     bool isAdministrator = false;
     bool isLoggedIn = false;
+    string currentuser = "";
 
     string strerror = "";
     string strEditVehicleError = "";
@@ -253,6 +255,7 @@
         if (user.Identity.Name != null)
         {
             isLoggedIn = true;
+            currentuser = user.Identity.Name;
             isAdministrator = user.IsInRole(ADMINISTRATION_ROLE);
 
             // Is user in the players table
@@ -308,6 +311,7 @@
     async Task PerformSearch()
     {
         strerror = "";
+
         if (SelectedVehicleClasses.Count() > 0)
         {
             // Build list
@@ -320,7 +324,7 @@
             }
 
             // Get a list of all vehicles in the game
-            vehicles = await @Service.GetGTAVehiclesRankedAsync(colIds);
+            vehicles = await @Service.GetGTAVehiclesRankedAsync(currentuser, colIds);
 
             if (DataListRef != null)
             {
@@ -331,7 +335,7 @@
         {
             // Get a list of all vehicles in the game
             List<int> DefaultValue = new List<int>() { 0 };
-            vehicles = await @Service.GetGTAVehiclesRankedAsync(DefaultValue);
+            vehicles = await @Service.GetGTAVehiclesRankedAsync(currentuser, DefaultValue);
         }
     }
 

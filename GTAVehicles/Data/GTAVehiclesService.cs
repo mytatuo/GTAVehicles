@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System;
+using Microsoft.Data.SqlClient;
 
 namespace GTAVehicles.Data
 {
@@ -66,13 +67,13 @@ namespace GTAVehicles.Data
             return Task.FromResult(result);
         }
 
-        public Task<IQueryable<GTAVehiclesRanked>> GetGTAVehiclesRankedAsync(List<int> classIDs)
+        public Task<IQueryable<GTAVehiclesRanked>> GetGTAVehiclesRankedAsync(string strCurrentUser, List<int> classIDs)
         {
             // get all vehicles in GTA
             if (classIDs.FirstOrDefault() == 0)
             {
                 var result = _context.GTAVehiclesRanked
-                              .FromSqlRaw("SELECT * FROM [Manipulyte].[dbo].[vw_GTAVehiclesRanked]")
+                              .FromSqlInterpolated($"EXECUTE [dbo].[sp_GTAVehiclesRankedByUser] @UserName = {strCurrentUser}")
                               .Select(x => new GTAVehiclesRanked
                               {
                                   ClassId = x.ClassId,
@@ -85,14 +86,14 @@ namespace GTAVehicles.Data
                                   TrackRankInClass = x.TrackRankInClass,
                                   TrackSpeed = x.TrackSpeed,
                                   VehicleModel = x.VehicleModel
-                              }).AsNoTracking();
+                              }).ToList().AsQueryable();
 
                 return Task.FromResult(result);
             }
             else
             {
                 var result = _context.GTAVehiclesRanked
-                    .FromSqlRaw("SELECT * FROM [Manipulyte].[dbo].[vw_GTAVehiclesRanked]").Where(x => classIDs.Contains(x.ClassId))
+                    .FromSqlInterpolated($"EXECUTE [dbo].[sp_GTAVehiclesRankedByUser] @UserName = {strCurrentUser}")
                     .Select(x => new GTAVehiclesRanked
                     {
                         ClassId = x.ClassId,
@@ -105,7 +106,7 @@ namespace GTAVehicles.Data
                         TrackRankInClass = x.TrackRankInClass,
                         TrackSpeed = x.TrackSpeed,
                         VehicleModel = x.VehicleModel
-                    }).AsNoTracking().AsQueryable();
+                    }).ToList().Where(x => classIDs.Contains(x.ClassId)).AsQueryable();
 
                 return Task.FromResult(result);
             }
