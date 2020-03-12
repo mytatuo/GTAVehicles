@@ -21,8 +21,14 @@ CAST(RANK() OVER (PARTITION BY dbo.GTAVehicles.ClassID ORDER BY dbo.GTAVehicles.
 dbo.GTAVehicles.DragSpeed,
 CAST(RANK() OVER (ORDER BY dbo.GTAVehicles.DragSpeed DESC) AS INT) AS DragRank,
 CAST(RANK() OVER (PARTITION BY dbo.GTAVehicles.ClassID ORDER BY dbo.GTAVehicles.DragSpeed DESC) AS INT) AS DragRankInClass,
+GTAPlayers.UserName,
 '' AS CharactersOwningVehicle
-FROM            dbo.GTAVehicleClass INNER JOIN
-                         dbo.GTAVehicles ON dbo.GTAVehicleClass.ID = dbo.GTAVehicles.ClassID
+FROM            GTAVehicleClass INNER JOIN
+                         GTAVehicles ON GTAVehicleClass.ID = GTAVehicles.ClassID LEFT OUTER JOIN
+                         GTAPlayerVehicles ON GTAVehicles.ID = GTAPlayerVehicles.VehicleID LEFT OUTER JOIN
+                         GTAPlayerGarages LEFT OUTER JOIN
+                         GTAPlayerCharacters ON GTAPlayerGarages.CharacterID = GTAPlayerCharacters.ID LEFT OUTER JOIN
+                         GTAPlayers ON GTAPlayerCharacters.PlayerID = GTAPlayers.ID ON GTAPlayerVehicles.PlayerGarageID = GTAPlayerGarages.ID
+WHERE        (GTAPlayers.UserName = @UserName) or (GTAPlayers.UserName is null) 
 END
 GO
