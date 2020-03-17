@@ -8,7 +8,7 @@ ALTER PROCEDURE [dbo].[sp_GTAVehiclesRankedByUser]
 AS
 BEGIN
 	SET NOCOUNT ON;
-SELECT        
+SELECT DISTINCT        
 dbo.GTAVehicles.ID,
 dbo.GTAVehicles.VehicleModel,
 dbo.GTAVehicles.ClassID,
@@ -20,8 +20,9 @@ dbo.GTAVehicles.DragSpeed,
 CAST(RANK() OVER (ORDER BY dbo.GTAVehicles.DragSpeed DESC) AS INT) AS DragRank,
 CAST(RANK() OVER (PARTITION BY dbo.GTAVehicles.ClassID ORDER BY dbo.GTAVehicles.DragSpeed DESC) AS INT) AS DragRankInClass,
 GTAPlayers.UserName,
-(
-SELECT       top 1 GTAPlayerCharacters.CharacterName
+
+STUFF((SELECT ';' + 
+CONVERT(nvarchar(10),GTAPlayerCharacters.ID) + ':' + GTAPlayerCharacters.CharacterName
 FROM            GTAVehicleClass INNER JOIN
                          GTAVehicles GTAVehiclesSubQuery ON GTAVehicleClass.ID = GTAVehiclesSubQuery.ClassID LEFT OUTER JOIN
                          GTAPlayerVehicles ON GTAVehiclesSubQuery.ID = GTAPlayerVehicles.VehicleID LEFT OUTER JOIN
@@ -29,7 +30,10 @@ FROM            GTAVehicleClass INNER JOIN
                          GTAPlayerCharacters ON GTAPlayerGarages.CharacterID = GTAPlayerCharacters.ID LEFT OUTER JOIN
                          GTAPlayers GTAPlayersSubQuery ON GTAPlayerCharacters.PlayerID = GTAPlayersSubQuery.ID ON GTAPlayerVehicles.PlayerGarageID = GTAPlayerGarages.ID
 WHERE        (GTAPlayersSubQuery.UserName = GTAPlayers.UserName) AND (GTAVehiclesSubQuery.ID = dbo.GTAVehicles.ID)
-) AS CharactersOwningVehicle
+
+          FOR XML PATH('')), 1, 1, '') CharactersOwningVehicle
+
+
 FROM            GTAVehicleClass INNER JOIN
                          GTAVehicles ON GTAVehicleClass.ID = GTAVehicles.ClassID LEFT OUTER JOIN
                          GTAPlayerVehicles ON GTAVehicles.ID = GTAPlayerVehicles.VehicleID LEFT OUTER JOIN
