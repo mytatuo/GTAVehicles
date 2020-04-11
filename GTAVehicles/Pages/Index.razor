@@ -238,14 +238,18 @@
             {
                 foreach (var Character in Characters)
                 {
+                    // Get the chracter color and name
+                    string[] CharacterDetails = Character.Split(':');
+
                     // Create Tooltip
                     builder.OpenElement(0, "a");
                     builder.AddAttribute(1, "href", "#");
                     builder.AddAttribute(2, "data-toggle", "tooltip");
-                    builder.AddAttribute(3, "title", Character);
+                    builder.AddAttribute(3, "title", CharacterDetails[1]);
 
                     builder.OpenComponent<RadzenIcon>(4);
                     builder.AddAttribute(5, "Icon", "account_circle");
+                    builder.AddAttribute(6, "Style", $"color: {CharacterDetails[0]}");
                     builder.CloseComponent();
 
                     builder.CloseElement();                    
