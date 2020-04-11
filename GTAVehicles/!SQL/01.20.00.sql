@@ -1,9 +1,11 @@
-﻿SET ANSI_NULLS ON
+﻿/****** Object:  StoredProcedure [dbo].[sp_GTAVehiclesRankedByUser]    Script Date: 4/11/2020 4:27:35 PM ******/
+SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER PROCEDURE [dbo].[sp_GTAVehiclesRankedByUser]
+CREATE PROCEDURE [dbo].[sp_GTAVehiclesRankedByUser]
 @UserName nvarchar(500)
 AS
 BEGIN
@@ -22,7 +24,7 @@ CAST(RANK() OVER (PARTITION BY dbo.GTAVehicles.ClassID ORDER BY dbo.GTAVehicles.
 GTAPlayers.UserName,
 
 STUFF((SELECT ';' + 
-CONVERT(nvarchar(10),GTAPlayerCharacters.ID) + ':' + GTAPlayerCharacters.CharacterName
+CONVERT(nvarchar(10),GTAPlayerCharacters.CharacterColor) + ':' + GTAPlayerCharacters.CharacterName
 FROM            GTAVehicleClass INNER JOIN
                          GTAVehicles GTAVehiclesSubQuery ON GTAVehicleClass.ID = GTAVehiclesSubQuery.ClassID LEFT OUTER JOIN
                          GTAPlayerVehicles ON GTAVehiclesSubQuery.ID = GTAPlayerVehicles.VehicleID LEFT OUTER JOIN
@@ -42,3 +44,6 @@ FROM            GTAVehicleClass INNER JOIN
                          GTAPlayers ON GTAPlayerCharacters.PlayerID = GTAPlayers.ID ON GTAPlayerVehicles.PlayerGarageID = GTAPlayerGarages.ID
 WHERE        (GTAPlayers.UserName = @UserName) or (GTAPlayers.UserName is null) 
 END
+GO
+
+

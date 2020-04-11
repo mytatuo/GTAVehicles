@@ -92,9 +92,11 @@
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="Id" Title="Owned" Visible="isLoggedIn" Width="70px">
                             <Template Context="data">
-                                <RadzenIcon Style="color: pink" Icon="account_circle" />
-                                <RadzenIcon Style="color: orange" Icon="account_circle" />
-                                <p>@data.CharactersOwningVehicle</p>
+                                <!-- call a function that will create the RenderFragment -->
+                                <!-- that will create RadzenIcon for each Character that owns the vehicle -->
+                                @*<RadzenIcon Style="color: pink" Icon="account_circle" />
+                                    <RadzenIcon Style="color: orange" Icon="account_circle" />*@
+                                <p>@GetIcons(data.CharactersOwningVehicle)</p>
                             </Template>
                         </RadzenGridColumn>
                         <RadzenGridColumn TItem="GTAVehiclesRanked" Property="VehicleModel" Title="Vehicle Model" />
@@ -218,6 +220,49 @@
 }
 
 @code {
+
+    private RenderFragment GetIcons(string CharactersOwningVehicle)
+    {
+        // 1 - Split CharactersOwningVehicle into seperate characters
+        // 2 - For each Character display an Icon
+        // 3 - Make tooltip on each Icon display the character name
+        // 4 - Make each Icon the prefered color of the Character
+
+        RenderFragment Icons;
+
+        if (CharactersOwningVehicle != null)
+        {
+            string[] Characters = CharactersOwningVehicle.Split(';');
+
+            Icons = builder =>
+            {
+                foreach (var Character in Characters)
+                {
+                    // Create Tooltip
+                    builder.OpenElement(0, "a");
+                    builder.AddAttribute(1, "href", "#");
+                    builder.AddAttribute(2, "data-toggle", "tooltip");
+                    builder.AddAttribute(3, "title", Character);
+
+                    builder.OpenComponent<RadzenIcon>(4);
+                    builder.AddAttribute(5, "Icon", "account_circle");
+                    builder.CloseComponent();
+
+                    builder.CloseElement();                    
+                }
+            };
+        }
+        else
+        {
+            Icons = builder =>
+            {
+                builder.AddContent(1, "");
+            };
+        }
+
+        return Icons;
+    }
+
     // AuthenticationState is available as a CascadingParameter
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
