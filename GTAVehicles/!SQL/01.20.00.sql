@@ -1,11 +1,11 @@
-﻿/****** Object:  StoredProcedure [dbo].[sp_GTAVehiclesRankedByUser]    Script Date: 4/11/2020 4:27:35 PM ******/
+﻿/****** Object:  StoredProcedure [dbo].[sp_GTAVehiclesRankedByUser]    Script Date: 6/6/2020 10:24:18 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_GTAVehiclesRankedByUser]
+
+ALTER PROCEDURE [dbo].[sp_GTAVehiclesRankedByUser]
 @UserName nvarchar(500)
 AS
 BEGIN
@@ -44,6 +44,3 @@ FROM            GTAVehicleClass INNER JOIN
                          GTAPlayers ON GTAPlayerCharacters.PlayerID = GTAPlayers.ID ON GTAPlayerVehicles.PlayerGarageID = GTAPlayerGarages.ID
 WHERE        (GTAPlayers.UserName = @UserName) or (GTAPlayers.UserName is null) 
 END
-GO
-
-
